@@ -6,36 +6,79 @@
 package Pacientes;
 
 import ServidorCitas.InterfaceServidorCitas;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
  *
  * @author adgar
  */
-public class GrupoPacientes {
+public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrupoPacientes {
     
+    private String ipGrupoPacientes;
     private String ipServidorCitas;
-    private int puerto;
-    
+    private int puertoServidorCitas;
+    private String idGrupo;
     private List<String> pacientes;
 
-    public GrupoPacientes(String ipServidorCitas, int puerto, List<String> pacientes) {
+    public GrupoPacientes(String ipServidorCitas, int puerto, List<String> pacientes
+        , String idGrupo) throws RemoteException {
+        
         this.ipServidorCitas = ipServidorCitas;
-        this.puerto = puerto;
+        this.puertoServidorCitas = puerto;
         this.pacientes = pacientes;
+        this.idGrupo = idGrupo;
+        
+        //se consigue la ip de la máquina en que se está ejecutando esta función
+        InetAddress inetAddress = null;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException ex) {
+            System.out.println("Error al conseguir la dirección IP de la máquina actual");
+            System.exit(1);
+        }        
+        this.ipGrupoPacientes = inetAddress.getHostAddress();
+        
+    }
+    
+    private void registrarServicioRegistro(){
+        //Registrar el servicio de esa EPS
+        try {
+            Registry r = null;
+            if(this.ipServidorCitas.equals(this.ipGrupoPacientes)){
+                //para poder ejecutarlos en misma máquina
+                r = java.rmi.registry.LocateRegistry.getRegistry(this.puertoServidorCitas);
+            }else{
+                r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
+            }
+            //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
+            r.bind("ServicioPacientes" + this.idGrupo, this);
+            System.out.println("Servidor del grupo de pacientes activo");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
     
     public void registrarPacientes() {
         
         try {
-            String nombreServicio = "//"+this.ipServidorCitas+":"+this.puerto+"/ServAsignacionCitas";
+            String nombreServicio = "//"+this.ipServidorCitas+":"+this.puertoServidorCitas+"/ServAsignacionCitas";
             InterfaceServidorCitas serverInterface = (InterfaceServidorCitas) Naming.lookup(nombreServicio);
-            serverInterface.registrarPacientes(this.pacientes);
-            //String miRetorno = serverInterface.registrarEPS(this.nombre);
-            //System.out.println(miRetorno);
+            boolean retorno = serverInterface.registrarPacientes(this.pacientes, this.ipGrupoPacientes);
+            if(retorno){
+                System.out.println("Los pacientes se registraron exitosamente");
+                this.registrarServicioRegistro();
+            }else{
+                System.out.println("Error: no se pudieron registrar los pacientes");
+                System.exit(1);
+            }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error: "+e.toString());
         }
         
     }
@@ -43,7 +86,7 @@ public class GrupoPacientes {
     public void pedirCita(){
         
         try {
-            String nombreServicio = "//"+this.ipServidorCitas+":"+this.puerto+"/ServAsignacionCitas";
+            String nombreServicio = "//"+this.ipServidorCitas+":"+this.puertoServidorCitas+"/ServAsignacionCitas";
             InterfaceServidorCitas serverInterface = (InterfaceServidorCitas) Naming.lookup(nombreServicio);
             boolean sePuede = serverInterface.evaluarUnPaciente("Adrian");
             //String miRetorno = serverInterface.registrarEPS(this.nombre);
@@ -51,6 +94,11 @@ public class GrupoPacientes {
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    @Override
+    public void informarAsignacionCita() throws RemoteException {
+        System.out.println("Cita asignada");
     }
     
 }

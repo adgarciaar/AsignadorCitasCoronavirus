@@ -18,8 +18,8 @@ import java.util.List;
 public interface InterfaceServidorCitas extends Remote{
     
     public Message retornarMensaje() throws RemoteException;
-    public void registrarPacientes(List<String> pacientes) throws RemoteException;
-    public boolean registrarEPS(String nombreEPS) throws RemoteException;
+    public boolean registrarPacientes(List<String> pacientes, String ipGrupo) throws RemoteException;
+    public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException;
     public boolean evaluarUnPaciente(String nombrePaciente) throws RemoteException;
     
 }

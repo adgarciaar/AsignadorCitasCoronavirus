@@ -19,6 +19,7 @@ public class InicioEPS {
     public static void main(String args[]) {
         
         String ipServidorCitas = "localhost";
+        ipServidorCitas = "192.168.0.9";
         int puertoServidorCitas = 7771;
         String nombreEPS = "Mi EPS";
         

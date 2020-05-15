@@ -23,8 +23,10 @@ import java.util.List;
 public class ServidorCitas extends UnicastRemoteObject implements InterfaceServidorCitas {
     
     private int puerto;
+    //mapa con duplas <EPS, IP de la máquina>
     private HashMap<String, String> listaEPSs;
-    private List<String> listaPacientes;
+    //mapa con duplas <Documento paciente, IP de la máquina de su grupo>
+    private HashMap<String, String> listaPacientes;
     
     private String ipServidorINS;
     private int puertoINS;
@@ -32,7 +34,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     public ServidorCitas(int puerto) throws RemoteException{
         this.puerto = puerto;
         this.listaEPSs = new HashMap<>();
-        this.listaPacientes = new ArrayList<>();
+        this.listaPacientes = new HashMap<>();
         
         this.ipServidorINS = "localhost";
         this.puertoINS = 7770;
@@ -47,13 +49,12 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     }
 
     @Override
-    public boolean registrarEPS(String nombreEPS) throws RemoteException {
+    public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException {
         
         synchronized(this) {
             
-            if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada
-                
-                this.listaEPSs.put(nombreEPS, "EPS");
+            if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada                
+                this.listaEPSs.put(nombreEPS, ipEPS);
                 System.out.println("Registrada la EPS "+nombreEPS);
                 return true;
             }else{
@@ -64,22 +65,55 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     }
 
     @Override
-    public void registrarPacientes(List<String> pacientes) throws RemoteException {
+    public boolean registrarPacientes(List<String> pacientes, String ipGrupo) throws RemoteException {
+        
+        boolean retorno = true;
+        
         synchronized(this) {
-            this.listaPacientes.addAll(pacientes);
-            System.out.println(this.listaPacientes);
+            
+            /*for (HashMap.Entry<String, String> entry : this.listaPacientes.entrySet()) {                
+            }*/
+            String documentoPaciente;
+            for(int i=0; i<pacientes.size(); i++){
+                documentoPaciente = pacientes.get(i);
+                if( this.listaPacientes.get( documentoPaciente ) == null ){
+                    //el paciente no se ha registrado previamente
+                    this.listaPacientes.put(documentoPaciente, ipGrupo);
+                }else{
+                    retorno = false;
+                    break;
+                }             
+            }   
+            
+            if(retorno){
+                System.out.println("Se agregaron los pacientes: "+pacientes);
+                return retorno;
+            }else{
+                //hacer rollback (remover los que se alcanzaron a agregar)
+                for(int i=0; i<pacientes.size(); i++){
+                    documentoPaciente = pacientes.get(i);
+                    if( this.listaPacientes.get( documentoPaciente ) != null ){
+                        this.listaPacientes.remove(documentoPaciente);
+                    }
+                }
+                System.out.println("Error: pacientes ya registrados. Aplicado rollback");
+                return false;
+            }
+            //this.listaPacientes.addAll(pacientes);
         }
         
         //llamado a EPS
+        /*
         String servidorEPS = "192.168.0.10";
         try {
             String nombreServicio = "//"+servidorEPS+":"+this.puerto+"/ServicioEPS"+"MiEPS";
             InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio); 
             serverInterface.avisar();
         } catch (Exception e) {
-            System.out.println(e.toString());            
+            System.out.println(e.toString());        
+            return false;
         }
-        
+        */
     }
 
     @Override

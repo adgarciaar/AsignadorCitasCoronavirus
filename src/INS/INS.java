@@ -12,7 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author adgar
  */
-public class INS extends UnicastRemoteObject implements InterfaceINS{
+public class INS extends UnicastRemoteObject implements InterfaceINS {
     
     private int puerto;
 

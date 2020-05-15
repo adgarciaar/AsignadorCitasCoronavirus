@@ -6,6 +6,8 @@
 package EPS;
 
 import ServidorCitas.InterfaceServidorCitas;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
@@ -18,6 +20,7 @@ import java.util.HashMap;
  */
 public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     
+    private String ipEPS;
     private String ipServidorCitas;
     private int puertoServidorCitas;
     
@@ -31,6 +34,37 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         this.puertoServidorCitas = puerto;
         this.nombre = nombre;
         this.pacientesConServicio = pacientesConServicio;
+        
+        //se consigue la ip de la máquina en que se está ejecutando esta función
+        InetAddress inetAddress = null;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException ex) {
+            System.out.println("Error al conseguir la dirección IP de la máquina actual");
+            System.exit(1);
+        }        
+        this.ipEPS = inetAddress.getHostAddress();
+        
+    }
+    
+    private void registrarServicioRegistro(){
+        //Registrar el servicio de esa EPS
+        try {
+            Registry r = null;
+            if(this.ipServidorCitas.equals(this.ipEPS)){
+                //para poder ejecutarlos en misma máquina
+                //System.out.println("estan en misma máquina");
+                r = java.rmi.registry.LocateRegistry.getRegistry(this.puertoServidorCitas);
+            }else{
+                //System.out.println("no estan en misma máquina");
+                r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
+            }
+            //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
+            r.bind("ServicioEPS" + this.nombre, this);
+            System.out.println("Servidor de la EPS activo");
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
     }
     
     public void registrarEPS() {
@@ -42,27 +76,18 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
             InterfaceServidorCitas serverInterface 
                     = (InterfaceServidorCitas) Naming.lookup(nombreServicio);
             
-            boolean retorno = serverInterface.registrarEPS(this.nombre);
+            boolean retorno = serverInterface.registrarEPS(this.nombre, this.ipEPS);
             
             if(retorno){
-                
-                //Registrar el servicio de esa EPS
-                try {
-                    Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);       
-                    r.bind("ServicioEPS"+this.nombre, this);
-                    System.out.println("Servidor de la EPS activo");
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                }
-                
+                this.registrarServicioRegistro(); //Registrar el servicio de esta EPS            
                 System.out.println("EPS ha sido registrada en el servidor de citas");
             }else{
-                System.out.println("EPS no pudo registrarse en el servidor de citas");
+                System.out.println("Error: EPS no pudo registrarse en el servidor de citas");
                 System.exit(1);
             }
             
         } catch (Exception e) {
-            System.out.println("Se presentó un error: "+e.toString());
+            System.out.println("Error: "+e.toString());
             System.exit(1);
         }
         

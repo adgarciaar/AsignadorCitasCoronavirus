@@ -6,8 +6,11 @@
 package Pacientes;
 
 import Pacientes.GrupoPacientes;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,14 +22,20 @@ public class InicioGrupoPacientes {
         String ipServidor = "localhost";
         int puerto = 7771;
         
+        String idGrupo = "Grupo1";
         List<String> pacientes = new ArrayList<>();
         pacientes.add("Adrian");
         pacientes.add("Juan");
         pacientes.add("Christian");
         
-        GrupoPacientes grupoPacientes = new GrupoPacientes(ipServidor, puerto, pacientes);
-        grupoPacientes.registrarPacientes();
-        //grupoPacientes.pedirCita();
+        GrupoPacientes grupoPacientes = null;
+        try {
+            grupoPacientes = new GrupoPacientes(ipServidor, puerto, pacientes, idGrupo);
+            grupoPacientes.registrarPacientes();
+        } catch (RemoteException ex) {
+            System.out.println(ex.toString());
+        }
+        
     }
     
 }
