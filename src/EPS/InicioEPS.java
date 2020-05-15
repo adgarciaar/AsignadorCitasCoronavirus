@@ -7,8 +7,6 @@ package EPS;
 
 import java.rmi.RemoteException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,9 +17,9 @@ public class InicioEPS {
     public static void main(String args[]) {
         
         String ipServidorCitas = "localhost";
-        ipServidorCitas = "192.168.0.9";
+        ipServidorCitas = "192.168.0.7";
         int puertoServidorCitas = 7771;
-        String nombreEPS = "Mi EPS";
+        String nombreEPS = "MiEPS2";
         
         HashMap<String, String> pacientesConServicio;
         pacientesConServicio = new HashMap<>();

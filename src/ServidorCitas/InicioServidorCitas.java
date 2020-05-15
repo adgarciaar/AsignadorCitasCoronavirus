@@ -5,6 +5,7 @@
  */
 package ServidorCitas;
 
+import GUI.GUIServidorCitas;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
@@ -29,6 +30,11 @@ public class InicioServidorCitas {
             Registry r = java.rmi.registry.LocateRegistry.createRegistry(puerto);       
             r.bind("ServAsignacionCitas", servicio);
             System.out.println("Servidor de citas activo");
+            
+            GUIServidorCitas gui = new GUIServidorCitas(servicio);
+            servicio.referenciarGUI(gui);
+            gui.setVisible(true);
+            
         } catch (Exception e) {
             System.out.println(e);
         }        

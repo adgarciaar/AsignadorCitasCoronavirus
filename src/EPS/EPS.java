@@ -25,6 +25,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     private int puertoServidorCitas;
     
     private String nombre;
+    //mapa con duplas <Documento paciente, Nombre paciente>
     private HashMap<String, String> pacientesConServicio; 
 
     public EPS(String ipServidorCitas, int puerto, String nombre, 

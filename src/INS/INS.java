@@ -7,6 +7,7 @@ package INS;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 
 /**
  *
@@ -15,9 +16,11 @@ import java.rmi.server.UnicastRemoteObject;
 public class INS extends UnicastRemoteObject implements InterfaceINS {
     
     private int puerto;
+    private HashMap<String, String> reportes;
 
     public INS(int puerto) throws RemoteException{
         this.puerto = puerto;
+        reportes = new HashMap<>();
     }
 
     @Override

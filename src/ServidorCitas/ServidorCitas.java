@@ -5,14 +5,12 @@
  */
 package ServidorCitas;
 
-import EPS.InterfaceEPS;
 import Entidades.Message;
+import GUI.GUIServidorCitas;
 import INS.InterfaceINS;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,14 +25,19 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     private HashMap<String, String> listaEPSs;
     //mapa con duplas <Documento paciente, IP de la máquina de su grupo>
     private HashMap<String, String> listaPacientes;
+    //mapa con duplas <IP cliente, Nombre servicio ofrecido>
+    private HashMap<String, String> listaServiciosClientes;
     
     private String ipServidorINS;
     private int puertoINS;
+    
+    GUIServidorCitas gui;
 
     public ServidorCitas(int puerto) throws RemoteException{
         this.puerto = puerto;
         this.listaEPSs = new HashMap<>();
         this.listaPacientes = new HashMap<>();
+        this.listaServiciosClientes = new HashMap<>();
         
         this.ipServidorINS = "localhost";
         this.puertoINS = 7770;
@@ -56,6 +59,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada                
                 this.listaEPSs.put(nombreEPS, ipEPS);
                 System.out.println("Registrada la EPS "+nombreEPS);
+                this.gui.addRowToJTableEPS(this.listaEPSs);
                 return true;
             }else{
                 System.out.println("La EPS "+nombreEPS+" ya se está registrada");
@@ -87,6 +91,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             
             if(retorno){
                 System.out.println("Se agregaron los pacientes: "+pacientes);
+                this.gui.addRowToJTablePacientes(this.listaPacientes);
                 return retorno;
             }else{
                 //hacer rollback (remover los que se alcanzaron a agregar)
@@ -128,6 +133,16 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             return false;
         }
         
+    }
+    
+    @Override
+    public void asignarCitas() throws RemoteException {
+        System.out.println("Asignando citas");
+    }
+
+    @Override
+    public void referenciarGUI(GUIServidorCitas gui) throws RemoteException{
+       this.gui = gui;
     }
     
 }

@@ -5,12 +5,9 @@
  */
 package Pacientes;
 
-import Pacientes.GrupoPacientes;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,6 +17,7 @@ public class InicioGrupoPacientes {
     
     public static void main(String args[]) {
         String ipServidor = "localhost";
+        ipServidor = "192.168.0.7";
         int puerto = 7771;
         
         String idGrupo = "Grupo1";

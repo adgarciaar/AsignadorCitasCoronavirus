@@ -7,6 +7,7 @@ package ServidorCitas;
 
 import EPS.InterfaceEPS;
 import Entidades.Message;
+import GUI.GUIServidorCitas;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -21,5 +22,7 @@ public interface InterfaceServidorCitas extends Remote{
     public boolean registrarPacientes(List<String> pacientes, String ipGrupo) throws RemoteException;
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException;
     public boolean evaluarUnPaciente(String nombrePaciente) throws RemoteException;
+    public void asignarCitas() throws RemoteException;
+    public void referenciarGUI(GUIServidorCitas gui) throws RemoteException;
     
 }
