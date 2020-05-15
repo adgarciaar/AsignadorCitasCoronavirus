@@ -5,12 +5,15 @@
  */
 package ServidorCitas;
 
+import EPS.InterfaceEPS;
 import Entidades.Message;
 import INS.InterfaceINS;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,7 +23,7 @@ import java.util.List;
 public class ServidorCitas extends UnicastRemoteObject implements InterfaceServidorCitas {
     
     private int puerto;
-    private List<String> miLista;
+    private HashMap<String, String> listaEPSs;
     private List<String> listaPacientes;
     
     private String ipServidorINS;
@@ -28,7 +31,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
     public ServidorCitas(int puerto) throws RemoteException{
         this.puerto = puerto;
-        this.miLista = new ArrayList<>();
+        this.listaEPSs = new HashMap<>();
         this.listaPacientes = new ArrayList<>();
         
         this.ipServidorINS = "localhost";
@@ -44,12 +47,20 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     }
 
     @Override
-    public String registrarEPS(String nombreEPS) throws RemoteException {
+    public boolean registrarEPS(String nombreEPS) throws RemoteException {
+        
         synchronized(this) {
-            this.miLista.add(nombreEPS);
-            System.out.println(this.miLista);
-        }
-        return "Registrada la EPS";
+            
+            if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada
+                
+                this.listaEPSs.put(nombreEPS, "EPS");
+                System.out.println("Registrada la EPS "+nombreEPS);
+                return true;
+            }else{
+                System.out.println("La EPS "+nombreEPS+" ya se está registrada");
+                return false;
+            }
+        }       
     }
 
     @Override
@@ -58,6 +69,17 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             this.listaPacientes.addAll(pacientes);
             System.out.println(this.listaPacientes);
         }
+        
+        //llamado a EPS
+        String servidorEPS = "192.168.0.10";
+        try {
+            String nombreServicio = "//"+servidorEPS+":"+this.puerto+"/ServicioEPS"+"MiEPS";
+            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio); 
+            serverInterface.avisar();
+        } catch (Exception e) {
+            System.out.println(e.toString());            
+        }
+        
     }
 
     @Override
@@ -66,8 +88,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         try {
             String nombreServicio = "//"+this.ipServidorINS+":"+this.puertoINS+"/ServicioINS";
             InterfaceINS serverInterface = (InterfaceINS) Naming.lookup(nombreServicio);
-            serverInterface.evaluarPaciente(nombrePaciente);      
-            return true;
+            return serverInterface.evaluarPaciente(nombrePaciente);   
         } catch (Exception e) {
             System.out.println(e);
             return false;

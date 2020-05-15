@@ -5,7 +5,10 @@
  */
 package EPS;
 
-import EPS.EPS;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,10 +17,23 @@ import EPS.EPS;
 public class InicioEPS {
     
     public static void main(String args[]) {
-        String ipServidor = "localhost";
-        int puerto = 7771;
-        EPS cliente = new EPS(ipServidor, puerto);
-        cliente.registrarEPS();
+        
+        String ipServidorCitas = "localhost";
+        int puertoServidorCitas = 7771;
+        String nombreEPS = "Mi EPS";
+        
+        HashMap<String, String> pacientesConServicio;
+        pacientesConServicio = new HashMap<>();
+        pacientesConServicio.put("D23", "Dexter");
+        pacientesConServicio.put("D45", "Ana");
+        
+        EPS cliente = null;
+        try {
+            cliente = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, pacientesConServicio);
+            cliente.registrarEPS();
+        } catch (RemoteException ex) {
+            System.out.println(ex.toString());
+        }        
     }
     
 }

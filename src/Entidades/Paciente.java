@@ -5,10 +5,16 @@
  */
 package Entidades;
 
+import java.io.Serializable;
+
 /**
  *
  * @author adgar
  */
-public class Paciente {
+public class Paciente implements Serializable{
+    
+    private String documento;
+    private String nombre;
+    private int edad;
     
 }

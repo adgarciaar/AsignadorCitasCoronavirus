@@ -5,6 +5,7 @@
  */
 package ServidorCitas;
 
+import EPS.InterfaceEPS;
 import Entidades.Message;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -18,7 +19,7 @@ public interface InterfaceServidorCitas extends Remote{
     
     public Message retornarMensaje() throws RemoteException;
     public void registrarPacientes(List<String> pacientes) throws RemoteException;
-    public String registrarEPS(String nombreEPS) throws RemoteException;
+    public boolean registrarEPS(String nombreEPS) throws RemoteException;
     public boolean evaluarUnPaciente(String nombrePaciente) throws RemoteException;
     
 }

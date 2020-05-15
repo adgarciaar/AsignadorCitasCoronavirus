@@ -26,7 +26,7 @@ public class GrupoPacientes {
         this.pacientes = pacientes;
     }
     
-    public void informarPacientes() {
+    public void registrarPacientes() {
         
         try {
             String nombreServicio = "//"+this.ipServidorCitas+":"+this.puerto+"/ServAsignacionCitas";

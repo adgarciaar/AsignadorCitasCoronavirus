@@ -3,16 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entidades;
+package EPS;
 
-import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author adgar
  */
-public class Cita implements Serializable{
+public interface InterfaceEPS extends Remote{
     
-    private String documentoPaciente;
+    public void avisar() throws RemoteException;
     
 }

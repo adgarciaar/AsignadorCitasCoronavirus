@@ -25,8 +25,8 @@ public class InicioGrupoPacientes {
         pacientes.add("Christian");
         
         GrupoPacientes grupoPacientes = new GrupoPacientes(ipServidor, puerto, pacientes);
-        grupoPacientes.informarPacientes();
-        grupoPacientes.pedirCita();
+        grupoPacientes.registrarPacientes();
+        //grupoPacientes.pedirCita();
     }
     
 }

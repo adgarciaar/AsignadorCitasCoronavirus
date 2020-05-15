@@ -23,7 +23,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS{
     @Override
     public boolean evaluarPaciente(String nombrePaciente) throws RemoteException {
         System.out.println("Paciente "+nombrePaciente+" fue evaluado");
-        return true;
+        return false;
     }
     
 }
