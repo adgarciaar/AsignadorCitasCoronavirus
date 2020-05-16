@@ -13,10 +13,10 @@ import java.rmi.registry.Registry;
  * @author adgar
  */
 public class InicioINS {
-    
-    public static void main(String args[]) {
+   
+    public void iniciarINS(int puerto){
         
-        int puerto = 7770;
+        //int puerto = 7770;
         
         InterfaceINS servicio = null;
         try {

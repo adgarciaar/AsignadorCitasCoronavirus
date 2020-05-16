@@ -15,11 +15,12 @@ import java.util.HashMap;
  */
 public class InicioGrupoPacientes {
     
-    public static void main(String args[]) {
+    //public static void main(String args[]) {
+    public void iniciarGrupo(String ipServidorCitas, int puertoServidorCitas) {
         
-        String ipServidor = "localhost";
-        ipServidor = "192.168.0.7";
-        int puerto = 7771;
+        //String ipServidor = "localhost";
+        //ipServidor = "192.168.0.7";
+        //int puerto = 7771;
         
         String idGrupo = "Grupo1";
         //duplas <Documento paciente, Paciente>
@@ -56,7 +57,7 @@ public class InicioGrupoPacientes {
         
         GrupoPacientes grupoPacientes = null;
         try {
-            grupoPacientes = new GrupoPacientes(ipServidor, puerto, pacientes, idGrupo);           
+            grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
             grupoPacientes.registrarPacientes();
         } catch (RemoteException ex) {
             System.out.println(ex.toString());

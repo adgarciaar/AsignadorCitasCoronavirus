@@ -14,11 +14,12 @@ import java.util.HashMap;
  */
 public class InicioEPS {
     
-    public static void main(String args[]) {
-        
-        String ipServidorCitas = "localhost";
-        ipServidorCitas = "192.168.0.7";
-        int puertoServidorCitas = 7771;
+    //public static void main(String args[]) {
+    public void iniciarEPS(String ipServidorCitas, int puertoServidorCitas) {  
+    
+        //String ipServidorCitas = "localhost";
+        //ipServidorCitas = "192.168.0.7";
+        //int puertoServidorCitas = 7771;
         String nombreEPS = "MiEPS";
         
         HashMap<String, String> pacientesConServicio;

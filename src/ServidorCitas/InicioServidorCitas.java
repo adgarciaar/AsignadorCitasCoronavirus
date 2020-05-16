@@ -15,13 +15,14 @@ import java.rmi.registry.Registry;
  */
 public class InicioServidorCitas {
     
-    public static void main(String args[]) {
+    //public static void main(String args[]) {
+    public void iniciarServidor(int puerto, String ipINS, int puertoINS){
         
-        int puerto = 7771;
+        //int puerto = 7771;
         
         InterfaceServidorCitas servicio = null;
         try {
-            servicio = new ServidorCitas(puerto);
+            servicio = new ServidorCitas(puerto, ipINS, puertoINS);
         } catch (RemoteException ex) {
             System.out.println(ex.toString());
         }

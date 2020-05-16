@@ -36,15 +36,17 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     
     GUIServidorCitas gui;
 
-    public ServidorCitas(int puerto) throws RemoteException{
+    public ServidorCitas(int puerto, String ipServidorINS, int puertoINS) throws RemoteException{
         this.puerto = puerto;
+        //this.ipServidorINS = "localhost";
+        //this.puertoINS = 7770;
+        this.ipServidorINS = ipServidorINS;
+        this.puertoINS = puertoINS;
+        
         this.listaEPSs = new HashMap<>();
         this.listaIPsPacientes = new HashMap<>();
         this.listaPacientes = new HashMap<>();
         this.listaPacientesGrupos = new HashMap<>();
-        
-        this.ipServidorINS = "localhost";
-        this.puertoINS = 7770;
     }
 
     @Override
