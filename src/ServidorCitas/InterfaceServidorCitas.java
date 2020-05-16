@@ -5,12 +5,11 @@
  */
 package ServidorCitas;
 
-import EPS.InterfaceEPS;
-import Entidades.Message;
+import Entidades.Paciente;
 import GUI.GUIServidorCitas;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  *
@@ -18,10 +17,9 @@ import java.util.List;
  */
 public interface InterfaceServidorCitas extends Remote{
     
-    public Message retornarMensaje() throws RemoteException;
-    public boolean registrarPacientes(List<String> pacientes, String ipGrupo) throws RemoteException;
+    public boolean registrarPacientes(HashMap<String, Paciente> pacientes, String ipGrupo) throws RemoteException;
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException;
-    public boolean evaluarUnPaciente(String nombrePaciente) throws RemoteException;
+    public boolean evaluarPacientes() throws RemoteException;
     public void asignarCitas() throws RemoteException;
     public void referenciarGUI(GUIServidorCitas gui) throws RemoteException;
     

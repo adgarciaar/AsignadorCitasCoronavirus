@@ -20,9 +20,11 @@ public class GUIServidorCitas extends javax.swing.JFrame {
 
     /**
      * Creates new form GUIServidorCitas
+     * @param servidorCitas
      */
     public GUIServidorCitas(InterfaceServidorCitas servidorCitas) {
         initComponents();
+        jButtonAsignarCitas.setVisible(false);
         this.servidorCitas = servidorCitas;
     }
 
@@ -162,11 +164,12 @@ public class GUIServidorCitas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAsignarCitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAsignarCitasActionPerformed
-        try {
-            this.servidorCitas.asignarCitas();
+        /*try {
+            //this.servidorCitas.asignarCitas();
+            this.servidorCitas.evaluarPacientes();
         } catch (RemoteException ex) {
             System.out.println(ex.toString());
-        }
+        }*/
     }//GEN-LAST:event_jButtonAsignarCitasActionPerformed
 
     /**

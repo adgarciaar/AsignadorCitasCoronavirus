@@ -5,8 +5,10 @@
  */
 package Pacientes;
 
+import Entidades.Paciente;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,15 +18,33 @@ import java.util.List;
 public class InicioGrupoPacientes {
     
     public static void main(String args[]) {
+        
         String ipServidor = "localhost";
         ipServidor = "192.168.0.7";
         int puerto = 7771;
         
         String idGrupo = "Grupo1";
-        List<String> pacientes = new ArrayList<>();
-        pacientes.add("Adrian");
-        pacientes.add("Juan");
-        pacientes.add("Christian");
+        //duplas <Documento paciente, Paciente>
+        HashMap<String, Paciente> pacientes = new HashMap<>();       
+        
+        Paciente paciente = new Paciente();        
+        paciente.setDocumento("ID1");
+        paciente.setNombre("Adrian");
+        paciente.setEdad(22);
+        
+        pacientes.put(paciente.getDocumento(), paciente);
+        
+        Paciente paciente1 = new Paciente();  
+        paciente.setDocumento("ID2");
+        paciente.setNombre("Juan");
+        paciente.setEdad(22);
+        pacientes.put(paciente1.getDocumento(), paciente1);
+        
+        Paciente paciente2 = new Paciente();  
+        paciente.setDocumento("ID3");
+        paciente.setNombre("Christian");
+        paciente.setEdad(21);
+        pacientes.put(paciente2.getDocumento(), paciente2);
         
         GrupoPacientes grupoPacientes = null;
         try {

@@ -5,6 +5,7 @@
  */
 package Pacientes;
 
+import Entidades.Paciente;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,7 +13,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  *
@@ -24,9 +25,9 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     private String ipServidorCitas;
     private int puertoServidorCitas;
     private String idGrupo;
-    private List<String> pacientes;
+    HashMap<String, Paciente> pacientes;
 
-    public GrupoPacientes(String ipServidorCitas, int puerto, List<String> pacientes
+    public GrupoPacientes(String ipServidorCitas, int puerto, HashMap<String, Paciente> pacientes
         , String idGrupo) throws RemoteException {
         
         this.ipServidorCitas = ipServidorCitas;
@@ -82,8 +83,13 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         }
         
     }
+
+    @Override
+    public void informarAsignacionCita() throws RemoteException {
+        System.out.println("Cita asignada");
+    }
     
-    public void pedirCita(){
+    /*public void pedirCita(){
         
         try {
             String nombreServicio = "//"+this.ipServidorCitas+":"+this.puertoServidorCitas+"/ServAsignacionCitas";
@@ -94,11 +100,6 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
-
-    @Override
-    public void informarAsignacionCita() throws RemoteException {
-        System.out.println("Cita asignada");
-    }
+    }*/
     
 }
