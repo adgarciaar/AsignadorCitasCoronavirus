@@ -58,8 +58,8 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
                 r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
             }
             //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
-            r.bind("ServicioPacientes" + this.idGrupo, this);
-            System.out.println("Servidor del grupo de pacientes activo");
+            r.rebind("ServicioPacientes" + this.idGrupo, this);
+            System.out.println("Servidor del grupo de pacientes activo: ServicioPacientes"+this.idGrupo);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -68,16 +68,26 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     public void registrarPacientes() {
         
         try {
-            String nombreServicio = "//"+this.ipServidorCitas+":"+this.puertoServidorCitas+"/ServAsignacionCitas";
-            InterfaceServidorCitas serverInterface = (InterfaceServidorCitas) Naming.lookup(nombreServicio);
-            boolean retorno = serverInterface.registrarPacientes(this.pacientes, this.ipGrupoPacientes);
-            if(retorno){
+            
+            this.registrarServicioRegistro();
+            
+            String nombreServicio = "//"+this.ipServidorCitas+":"
+                    +this.puertoServidorCitas+"/ServAsignacionCitas";
+            
+            InterfaceServidorCitas serverInterface = (
+                    InterfaceServidorCitas) Naming.lookup(nombreServicio);
+            
+            serverInterface.registrarPacientes(this.pacientes, 
+                    this.ipGrupoPacientes, this.idGrupo);
+            
+            /*if(retorno){
                 System.out.println("Los pacientes se registraron exitosamente");
-                this.registrarServicioRegistro();
+                
             }else{
                 System.out.println("Error: no se pudieron registrar los pacientes");
                 System.exit(1);
             }
+            */
         } catch (Exception e) {
             System.out.println(this.pacientes.size());
             System.out.println("Error: "+e.toString());
@@ -102,5 +112,11 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             System.out.println(e);
         }
     }*/
+
+    @Override
+    public void recibirMensaje(String mensaje) throws RemoteException {
+        System.out.println("Mensaje recibido desde servidor de citas:");
+        System.out.println(mensaje);
+    }
     
 }

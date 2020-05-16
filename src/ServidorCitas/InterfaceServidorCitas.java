@@ -17,7 +17,8 @@ import java.util.HashMap;
  */
 public interface InterfaceServidorCitas extends Remote{
     
-    public boolean registrarPacientes(HashMap<String, Paciente> pacientes, String ipGrupo) throws RemoteException;
+    public void registrarPacientes(HashMap<String, Paciente> pacientes, 
+            String ipGrupo, String idGrupo) throws RemoteException;
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException;
     public boolean evaluarPacientes() throws RemoteException;
     public void asignarCitas() throws RemoteException;

@@ -62,7 +62,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
             }
             //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
             r.bind("ServicioEPS" + this.nombre, this);
-            System.out.println("Servidor de la EPS activo");
+            System.out.println("Servidor de la EPS activo: ServicioEPS"+this.nombre);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -97,6 +97,17 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     @Override
     public void avisar() throws RemoteException {
         System.out.println("Avisado en EPS");
+    }
+
+    @Override
+    public boolean pacienteTieneCobertura(String documentoPaciente) throws RemoteException {        
+        if( this.pacientesConServicio.get(documentoPaciente) != null ){
+            System.out.println("Paciente con documento "+documentoPaciente+" tiene cobertura");
+            return true;
+        }else{
+            System.out.println("Paciente con documento "+documentoPaciente+" no tiene cobertura");
+            return false;
+        }        
     }
     
 }

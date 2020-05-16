@@ -5,8 +5,10 @@
  */
 package ServidorCitas;
 
+import EPS.InterfaceEPS;
 import Entidades.Paciente;
 import GUI.GUIServidorCitas;
+import GrupoPacientes.InterfaceGrupoPacientes;
 import INS.InterfaceINS;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -26,8 +28,8 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     private HashMap<String, String> listaIPsPacientes;
     //mapa con duplas <Documento paciente, Paciente>
     private HashMap<String, Paciente> listaPacientes;
-    //mapa con duplas <IP cliente, Nombre servicio ofrecido>
-    private HashMap<String, String> listaServiciosClientes;
+    //mapa con duplas <Documento paciente, Id de su grupo>
+    private HashMap<String, String> listaPacientesGrupos;
     
     private String ipServidorINS;
     private int puertoINS;
@@ -39,7 +41,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         this.listaEPSs = new HashMap<>();
         this.listaIPsPacientes = new HashMap<>();
         this.listaPacientes = new HashMap<>();
-        this.listaServiciosClientes = new HashMap<>();
+        this.listaPacientesGrupos = new HashMap<>();
         
         this.ipServidorINS = "localhost";
         this.puertoINS = 7770;
@@ -63,9 +65,10 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     }
 
     @Override
-    public boolean registrarPacientes(HashMap<String, Paciente> pacientes, String ipGrupo) throws RemoteException {
+    public void registrarPacientes(HashMap<String, Paciente> pacientes, 
+            String ipGrupo, String idGrupo) throws RemoteException {
         
-        boolean retorno = true;
+        boolean registroCorrecto = true;
         
         synchronized(this) {
             
@@ -80,16 +83,21 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     //el paciente no se ha registrado previamente
                     this.listaIPsPacientes.put(documentoPaciente, ipGrupo);
                     this.listaPacientes.put(documentoPaciente, paciente);
+                    this.listaPacientesGrupos.put(documentoPaciente, idGrupo);
                 }else{
-                    retorno = false;
+                    //retorno = false;
                     break;
                 }             
             }
             
-            if(retorno){
+            if(registroCorrecto){
+                
                 System.out.println("Se agregaron los pacientes: "+pacientes);
                 this.gui.addRowToJTablePacientes(this.listaIPsPacientes);
-                return retorno;
+                
+                this.verificarEPSPacientes(pacientes);
+                //return registroCorrecto;
+                
             }else{
                 //hacer rollback (remover los que se alcanzaron a agregar)
                 for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) { 
@@ -100,23 +108,10 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     }
                 }
                 System.out.println("Error: pacientes ya registrados. Aplicado rollback");
-                return false;
+                //return false;
             }
             //this.listaPacientes.addAll(pacientes);
-        }
-        
-        //llamado a EPS
-        /*
-        String servidorEPS = "192.168.0.10";
-        try {
-            String nombreServicio = "//"+servidorEPS+":"+this.puerto+"/ServicioEPS"+"MiEPS";
-            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio); 
-            serverInterface.avisar();
-        } catch (Exception e) {
-            System.out.println(e.toString());        
-            return false;
-        }
-        */
+        }        
     }
 
     @Override
@@ -126,10 +121,59 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             String nombreServicio = "//"+this.ipServidorINS+":"+this.puertoINS+"/ServicioINS";
             InterfaceINS serverInterface = (InterfaceINS) Naming.lookup(nombreServicio);
             //return serverInterface.evaluarPaciente(nombrePaciente);   
-            return serverInterface.evaluarPaciente("Algo");   
+            //return serverInterface.evaluarPaciente("Algo");
+            return true;
         } catch (Exception e) {
             System.out.println(e);
             return false;
+        }
+        
+    }
+    
+    public void verificarEPSPacientes(HashMap<String, Paciente> pacientes){
+        synchronized(this) {
+            for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) {                
+                String documentoPaciente = entry.getKey();
+                Paciente paciente = entry.getValue();
+                String EPSPaciente = paciente.getEPS();
+                String ipEPS = this.listaEPSs.get(EPSPaciente);    
+                if(this.verificarEPSPaciente(documentoPaciente, EPSPaciente, ipEPS)){
+                    System.out.println("Paciente con documento "+documentoPaciente+" tiene EPS válida");
+                }else{
+                    String mensaje = "Paciente con documento "+documentoPaciente+" no tiene EPS válida";
+                    System.out.println(mensaje);
+                    String ipGrupo = this.listaIPsPacientes.get(documentoPaciente);
+                    String idGrupo = this.listaPacientesGrupos.get(documentoPaciente);
+                    this.enviarMensajeGrupoPacientes(mensaje, ipGrupo, idGrupo);
+                }
+            }
+        }
+    }
+    
+    public boolean verificarEPSPaciente(String documentoPaciente, String nombreEPS, String ipEPS){     
+        
+        try {
+            String nombreServicio = "//"+ipEPS+":"+this.puerto+"/ServicioEPS"+nombreEPS;
+            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio); 
+            return serverInterface.pacienteTieneCobertura(documentoPaciente);            
+        } catch (Exception e) {
+            System.out.println(e.toString());        
+            return false;
+        }
+        
+    }
+    
+    public void enviarMensajeGrupoPacientes(String mensaje, String ipGrupo, String idGrupo){
+        
+        try {
+            String nombreServicio = "//"+ipGrupo+":"+this.puerto+"/ServicioPacientes"+idGrupo;
+            //System.out.println(nombreServicio);
+            InterfaceGrupoPacientes serverInterface = 
+                    (InterfaceGrupoPacientes) Naming.lookup(nombreServicio);
+            
+            serverInterface.recibirMensaje(mensaje);
+        } catch (Exception e) {
+            System.out.println(e.toString());
         }
         
     }

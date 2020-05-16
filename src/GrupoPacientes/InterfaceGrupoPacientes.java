@@ -14,6 +14,7 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceGrupoPacientes extends Remote {
     
+    public void recibirMensaje(String mensaje) throws RemoteException;
     public void informarAsignacionCita() throws RemoteException;
     
 }

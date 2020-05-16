@@ -5,9 +5,11 @@
  */
 package INS;
 
+import Entidades.Paciente;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -24,9 +26,27 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
     }
 
     @Override
-    public boolean evaluarPaciente(String nombrePaciente) throws RemoteException {
-        System.out.println("Paciente "+nombrePaciente+" fue evaluado");
-        return true;
+    public int realizarDiagnostico(Paciente paciente) throws RemoteException {
+        
+        int puntaje = 0;  
+        String sintoma;
+        List<String> sintomas = paciente.getSintomas();
+        for(int i=0; i<sintomas.size(); i++){
+            sintoma = sintomas.get(i);
+            switch (sintoma) {
+                case "bien":
+                    puntaje = puntaje + 0;
+                    break;
+                case "enfermo":
+                    puntaje = puntaje + 70;
+                    break;
+            }
+        }
+        
+        System.out.println("Paciente "+paciente.getNombre()+" con documento "
+                +paciente.getDocumento()+" fue evaluado y "
+                + "obtuvo "+puntaje+" puntaje");
+        return puntaje;
     }
     
 }

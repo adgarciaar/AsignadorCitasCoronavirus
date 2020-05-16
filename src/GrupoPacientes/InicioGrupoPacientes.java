@@ -47,7 +47,7 @@ public class InicioGrupoPacientes {
         paciente2.setDocumento("ID3");
         paciente2.setNombre("Christian");
         paciente2.setEdad(21);
-        paciente2.setEPS("OtraEPS");
+        paciente2.setEPS("MiEPS");
         paciente2.agregarSintoma("bien");
         paciente2.agregarSintoma("enfermo");
         pacientes.put(paciente2.getDocumento(), paciente2);
@@ -56,7 +56,7 @@ public class InicioGrupoPacientes {
         
         GrupoPacientes grupoPacientes = null;
         try {
-            grupoPacientes = new GrupoPacientes(ipServidor, puerto, pacientes, idGrupo);
+            grupoPacientes = new GrupoPacientes(ipServidor, puerto, pacientes, idGrupo);           
             grupoPacientes.registrarPacientes();
         } catch (RemoteException ex) {
             System.out.println(ex.toString());

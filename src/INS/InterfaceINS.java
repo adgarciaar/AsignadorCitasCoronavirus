@@ -5,6 +5,7 @@
  */
 package INS;
 
+import Entidades.Paciente;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,6 +15,6 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceINS extends Remote {
     
-    public boolean evaluarPaciente(String nombrePaciente) throws RemoteException;
+    public int realizarDiagnostico(Paciente paciente) throws RemoteException;
     
 }

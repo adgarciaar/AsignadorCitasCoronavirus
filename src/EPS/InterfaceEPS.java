@@ -15,5 +15,6 @@ import java.rmi.RemoteException;
 public interface InterfaceEPS extends Remote{
     
     public void avisar() throws RemoteException;
+    public boolean pacienteTieneCobertura(String documentoPaciente) throws RemoteException;
     
 }
