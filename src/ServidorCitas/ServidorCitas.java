@@ -38,6 +38,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         this.puerto = puerto;
         this.listaEPSs = new HashMap<>();
         this.listaIPsPacientes = new HashMap<>();
+        this.listaPacientes = new HashMap<>();
         this.listaServiciosClientes = new HashMap<>();
         
         this.ipServidorINS = "localhost";
@@ -83,7 +84,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     retorno = false;
                     break;
                 }             
-            }   
+            }
             
             if(retorno){
                 System.out.println("Se agregaron los pacientes: "+pacientes);

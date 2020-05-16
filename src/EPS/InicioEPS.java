@@ -19,12 +19,13 @@ public class InicioEPS {
         String ipServidorCitas = "localhost";
         ipServidorCitas = "192.168.0.7";
         int puertoServidorCitas = 7771;
-        String nombreEPS = "MiEPS2";
+        String nombreEPS = "MiEPS";
         
         HashMap<String, String> pacientesConServicio;
         pacientesConServicio = new HashMap<>();
-        pacientesConServicio.put("D23", "Dexter");
-        pacientesConServicio.put("D45", "Ana");
+        
+        pacientesConServicio.put("ID1", "Adrian");
+        pacientesConServicio.put("ID2", "Juan");
         
         EPS cliente = null;
         try {

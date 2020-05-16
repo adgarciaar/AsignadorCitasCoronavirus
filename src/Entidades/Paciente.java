@@ -18,6 +18,7 @@ public class Paciente implements Serializable{
     private String documento;
     private String nombre;
     private int edad;
+    private String EPS;
     private List<String> sintomas;
 
     public Paciente() {
@@ -69,6 +70,14 @@ public class Paciente implements Serializable{
             }
         }
         return retorno;
+    }
+
+    public String getEPS() {
+        return EPS;
+    }
+
+    public void setEPS(String EPS) {
+        this.EPS = EPS;
     }
     
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Pacientes;
+package GrupoPacientes;
 
 import Entidades.Paciente;
 import ServidorCitas.InterfaceServidorCitas;
@@ -79,6 +79,7 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
                 System.exit(1);
             }
         } catch (Exception e) {
+            System.out.println(this.pacientes.size());
             System.out.println("Error: "+e.toString());
         }
         

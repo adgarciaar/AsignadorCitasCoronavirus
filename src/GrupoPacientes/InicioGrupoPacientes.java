@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Pacientes;
+package GrupoPacientes;
 
 import Entidades.Paciente;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -31,20 +29,30 @@ public class InicioGrupoPacientes {
         paciente.setDocumento("ID1");
         paciente.setNombre("Adrian");
         paciente.setEdad(22);
-        
+        paciente.setEPS("MiEPS");
+        paciente.agregarSintoma("bien");
+        paciente.agregarSintoma("enfermo");       
         pacientes.put(paciente.getDocumento(), paciente);
         
         Paciente paciente1 = new Paciente();  
-        paciente.setDocumento("ID2");
-        paciente.setNombre("Juan");
-        paciente.setEdad(22);
+        paciente1.setDocumento("ID2");
+        paciente1.setNombre("Juan");
+        paciente1.setEdad(22);
+        paciente1.setEPS("MiEPS");
+        paciente1.agregarSintoma("bien");
+        paciente1.agregarSintoma("enfermo");
         pacientes.put(paciente1.getDocumento(), paciente1);
         
         Paciente paciente2 = new Paciente();  
-        paciente.setDocumento("ID3");
-        paciente.setNombre("Christian");
-        paciente.setEdad(21);
+        paciente2.setDocumento("ID3");
+        paciente2.setNombre("Christian");
+        paciente2.setEdad(21);
+        paciente2.setEPS("OtraEPS");
+        paciente2.agregarSintoma("bien");
+        paciente2.agregarSintoma("enfermo");
         pacientes.put(paciente2.getDocumento(), paciente2);
+        
+        //System.out.println(pacientes);
         
         GrupoPacientes grupoPacientes = null;
         try {

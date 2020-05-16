@@ -23,8 +23,7 @@ public class GUIServidorCitas extends javax.swing.JFrame {
      * @param servidorCitas
      */
     public GUIServidorCitas(InterfaceServidorCitas servidorCitas) {
-        initComponents();
-        jButtonAsignarCitas.setVisible(false);
+        initComponents();        
         this.servidorCitas = servidorCitas;
     }
 
@@ -44,7 +43,6 @@ public class GUIServidorCitas extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTablePacientes = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        jButtonAsignarCitas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,13 +108,6 @@ public class GUIServidorCitas extends javax.swing.JFrame {
 
         jLabel3.setText("Pacientes registrados");
 
-        jButtonAsignarCitas.setText("Asignar citas");
-        jButtonAsignarCitas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAsignarCitasActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,10 +127,7 @@ public class GUIServidorCitas extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(367, 367, 367)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(352, 352, 352)
-                        .addComponent(jButtonAsignarCitas)))
+                        .addComponent(jLabel1)))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -155,22 +143,11 @@ public class GUIServidorCitas extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jButtonAsignarCitas)
-                .addGap(29, 29, 29))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButtonAsignarCitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAsignarCitasActionPerformed
-        /*try {
-            //this.servidorCitas.asignarCitas();
-            this.servidorCitas.evaluarPacientes();
-        } catch (RemoteException ex) {
-            System.out.println(ex.toString());
-        }*/
-    }//GEN-LAST:event_jButtonAsignarCitasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -240,7 +217,6 @@ public class GUIServidorCitas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAsignarCitas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
