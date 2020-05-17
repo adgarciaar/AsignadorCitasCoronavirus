@@ -115,19 +115,19 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             //this.listaPacientes.addAll(pacientes);
         }        
     }
-
-    @Override
-    public boolean evaluarPacientes() throws RemoteException {
+    
+    public void evaluarPaciente(Paciente paciente) {
         
         try {
             String nombreServicio = "//"+this.ipServidorINS+":"+this.puertoINS+"/ServicioINS";
             InterfaceINS serverInterface = (InterfaceINS) Naming.lookup(nombreServicio);
+            int puntaje = serverInterface.evaluarPaciente(paciente);
             //return serverInterface.evaluarPaciente(nombrePaciente);   
-            //return serverInterface.evaluarPaciente("Algo");
-            return true;
+            System.out.println("Puntaje paciente "+paciente.getNombre()+" es "+puntaje);
+            
         } catch (Exception e) {
             System.out.println(e);
-            return false;
+            
         }
         
     }
@@ -141,6 +141,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 String ipEPS = this.listaEPSs.get(EPSPaciente);    
                 if(this.verificarEPSPaciente(documentoPaciente, EPSPaciente, ipEPS)){
                     System.out.println("Paciente con documento "+documentoPaciente+" tiene EPS válida");
+                    this.evaluarPaciente(paciente);
                 }else{
                     String mensaje = "Paciente con documento "+documentoPaciente+" no tiene EPS válida";
                     System.out.println(mensaje);

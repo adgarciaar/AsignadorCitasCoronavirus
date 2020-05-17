@@ -26,7 +26,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
     }
 
     @Override
-    public int realizarDiagnostico(Paciente paciente) throws RemoteException {
+    public int evaluarPaciente(Paciente paciente) throws RemoteException {
         
         int puntaje = 0;  
         String sintoma;
@@ -35,7 +35,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
             sintoma = sintomas.get(i);
             switch (sintoma) {
                 case "bien":
-                    puntaje = puntaje + 0;
+                    puntaje = puntaje + 1;
                     break;
                 case "enfermo":
                     puntaje = puntaje + 70;

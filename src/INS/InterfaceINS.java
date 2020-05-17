@@ -15,6 +15,6 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceINS extends Remote {
     
-    public int realizarDiagnostico(Paciente paciente) throws RemoteException;
+    public int evaluarPaciente(Paciente paciente) throws RemoteException;
     
 }

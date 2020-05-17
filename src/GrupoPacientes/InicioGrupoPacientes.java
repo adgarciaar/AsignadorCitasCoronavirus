@@ -35,23 +35,30 @@ public class InicioGrupoPacientes {
         paciente.agregarSintoma("enfermo");       
         pacientes.put(paciente.getDocumento(), paciente);
         
-        Paciente paciente1 = new Paciente();  
-        paciente1.setDocumento("ID2");
-        paciente1.setNombre("Juan");
-        paciente1.setEdad(22);
-        paciente1.setEPS("MiEPS");
-        paciente1.agregarSintoma("bien");
-        paciente1.agregarSintoma("enfermo");
-        pacientes.put(paciente1.getDocumento(), paciente1);
+        paciente = new Paciente();
+        paciente.setDocumento("ID2");
+        paciente.setNombre("Juan");
+        paciente.setEdad(22);
+        paciente.setEPS("MiEPS");
+        paciente.agregarSintoma("bien");
+        paciente.agregarSintoma("enfermo");
+        pacientes.put(paciente.getDocumento(), paciente);
         
-        Paciente paciente2 = new Paciente();  
-        paciente2.setDocumento("ID3");
-        paciente2.setNombre("Christian");
-        paciente2.setEdad(21);
-        paciente2.setEPS("MiEPS");
-        paciente2.agregarSintoma("bien");
-        paciente2.agregarSintoma("enfermo");
-        pacientes.put(paciente2.getDocumento(), paciente2);
+        paciente = new Paciente();
+        paciente.setDocumento("ID3");
+        paciente.setNombre("Christian");
+        paciente.setEdad(21);
+        paciente.setEPS("MiEPS");        
+        paciente.agregarSintoma("enfermo");
+        pacientes.put(paciente.getDocumento(), paciente);
+        
+        paciente = new Paciente();
+        paciente.setDocumento("ID4");
+        paciente.setNombre("Andrea");
+        paciente.setEdad(20);
+        paciente.setEPS("MiEPS");
+        paciente.agregarSintoma("bien");        
+        pacientes.put(paciente.getDocumento(), paciente);
         
         //System.out.println(pacientes);
         

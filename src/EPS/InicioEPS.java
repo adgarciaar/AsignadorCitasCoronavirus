@@ -27,6 +27,7 @@ public class InicioEPS {
         
         pacientesConServicio.put("ID1", "Adrian");
         pacientesConServicio.put("ID2", "Juan");
+        pacientesConServicio.put("ID4", "Andrea");
         
         EPS cliente = null;
         try {
