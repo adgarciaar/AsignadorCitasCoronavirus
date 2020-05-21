@@ -8,18 +8,23 @@ package GUI;
 import GrupoPacientes.InicioGrupoPacientes;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author adgar
  */
 public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
+    
+    private String rutaArchivo;
 
     /**
      * Creates new form GUIEps
      */
     public GUIInicioGrupoPacientes() {
         initComponents();
+        rutaArchivo = null;
     }
 
     /**
@@ -120,22 +125,27 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIpActionPerformed
 
     private void jButtonIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIniciarActionPerformed
-        String ip = jTextFieldIp.getText();
-        int puerto = Integer.parseInt(jTextFieldPuerto.getText());
-        InicioGrupoPacientes inicioGrupo = new InicioGrupoPacientes();
-        inicioGrupo.iniciarGrupo(ip, puerto);
-        this.setVisible(false);
+        if(rutaArchivo == null){
+            JOptionPane.showMessageDialog(new JFrame(), "Debe seleccionar archivo", "Error",
+            JOptionPane.ERROR_MESSAGE);
+        }else{        
+            String ip = jTextFieldIp.getText();
+            int puerto = Integer.parseInt(jTextFieldPuerto.getText());
+            InicioGrupoPacientes inicioGrupo = new InicioGrupoPacientes();
+            inicioGrupo.iniciarGrupo(ip, puerto, this.rutaArchivo);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_jButtonIniciarActionPerformed
 
     private void jButtonArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonArchivoActionPerformed
-        JFileChooser chooser = new JFileChooser("src/");
+        JFileChooser chooser = new JFileChooser("archivosTexto/");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int option = chooser.showOpenDialog(this); // parentComponent must a component like JFrame, JDialog...
         if (option == JFileChooser.APPROVE_OPTION) {
             File selectedFile = chooser.getSelectedFile();
             String path = selectedFile.getAbsolutePath();
-            System.out.println(path);
-            //this.ruta = path;
+            //System.out.println(path);
+            this.rutaArchivo = path;
         }
     }//GEN-LAST:event_jButtonArchivoActionPerformed
 

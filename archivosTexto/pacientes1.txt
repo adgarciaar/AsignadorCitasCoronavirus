@@ -1,0 +1,10 @@
+Grupo1
+4
+ID1	Adrian	22	MiEPS
+2	bien	enfermo
+ID2	Juan	22	MiEPS
+2	bien	enfermo
+ID3	Christian	21	MiEPS
+1	enfermo
+ID4	Andrea	20	MiEPS
+1	bien

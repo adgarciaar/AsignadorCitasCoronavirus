@@ -148,8 +148,9 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     String ipGrupo = this.listaIPsPacientes.get(documentoPaciente);
                     String idGrupo = this.listaPacientesGrupos.get(documentoPaciente);
                     this.enviarMensajeGrupoPacientes(mensaje, ipGrupo, idGrupo);
-                }
+                }                
             }
+            this.asignarCitas();
         }
     }
     
@@ -181,8 +182,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         
     }
     
-    @Override
-    public void asignarCitas() throws RemoteException {
+    public void asignarCitas(){
         System.out.println("Asignando citas");
     }
 

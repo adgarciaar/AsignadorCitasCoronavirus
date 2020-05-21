@@ -6,59 +6,70 @@
 package GrupoPacientes;
 
 import Entidades.Paciente;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  *
  * @author adgar
  */
-public class InicioGrupoPacientes {
+public class InicioGrupoPacientes {    
     
-    //public static void main(String args[]) {
-    public void iniciarGrupo(String ipServidorCitas, int puertoServidorCitas) {
+    public void iniciarGrupo(String ipServidorCitas, int puertoServidorCitas, String rutaArchivo) {
         
-        //String ipServidor = "localhost";
-        //ipServidor = "192.168.0.7";
-        //int puerto = 7771;
+        List<String> instruccionesConfiguracion = new ArrayList<>();
         
-        String idGrupo = "Grupo1";
+        try {
+            
+            File myObj = new File(rutaArchivo);
+            try (Scanner myReader = new Scanner(myObj)) {
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    instruccionesConfiguracion.add(data.trim());
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: No se encontró archivo de configuración");
+            System.exit(1);
+        }
+        
+        
+        String idGrupo = instruccionesConfiguracion.get(0);
+        
+        int numeroPacientes = Integer.parseInt(instruccionesConfiguracion.get(1));
+        
         //duplas <Documento paciente, Paciente>
-        HashMap<String, Paciente> pacientes = new HashMap<>();       
+        HashMap<String, Paciente> pacientes = new HashMap<>();     
         
-        Paciente paciente = new Paciente();        
-        paciente.setDocumento("ID1");
-        paciente.setNombre("Adrian");
-        paciente.setEdad(22);
-        paciente.setEPS("MiEPS");
-        paciente.agregarSintoma("bien");
-        paciente.agregarSintoma("enfermo");       
-        pacientes.put(paciente.getDocumento(), paciente);
+        String[] datosPaciente;      
+        String[] sintomasPaciente;  
+        int numeroSintomas;
+        Paciente paciente;
         
-        paciente = new Paciente();
-        paciente.setDocumento("ID2");
-        paciente.setNombre("Juan");
-        paciente.setEdad(22);
-        paciente.setEPS("MiEPS");
-        paciente.agregarSintoma("bien");
-        paciente.agregarSintoma("enfermo");
-        pacientes.put(paciente.getDocumento(), paciente);
-        
-        paciente = new Paciente();
-        paciente.setDocumento("ID3");
-        paciente.setNombre("Christian");
-        paciente.setEdad(21);
-        paciente.setEPS("MiEPS");        
-        paciente.agregarSintoma("enfermo");
-        pacientes.put(paciente.getDocumento(), paciente);
-        
-        paciente = new Paciente();
-        paciente.setDocumento("ID4");
-        paciente.setNombre("Andrea");
-        paciente.setEdad(20);
-        paciente.setEPS("MiEPS");
-        paciente.agregarSintoma("bien");        
-        pacientes.put(paciente.getDocumento(), paciente);
+        for (int i = 2; i < 2 + numeroPacientes*2; i+=2) {      
+            
+            datosPaciente = instruccionesConfiguracion.get(i).split("\t");
+            sintomasPaciente = instruccionesConfiguracion.get(i+1).split("\t");
+            numeroSintomas = Integer.parseInt(sintomasPaciente[0]);
+            
+            paciente = new Paciente();
+            paciente.setDocumento(datosPaciente[0]);
+            paciente.setNombre(datosPaciente[1]);
+            paciente.setEdad( Integer.parseInt(datosPaciente[2]) );
+            paciente.setEPS( datosPaciente[3] );
+            
+            for (int j = 1; j < 1 + numeroSintomas; j++) {   
+                paciente.agregarSintoma( sintomasPaciente[j] );
+            }
+            
+            pacientes.put(paciente.getDocumento(), paciente);            
+        }
         
         //System.out.println(pacientes);
         

@@ -27,14 +27,17 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     private String nombre;
     //mapa con duplas <Documento paciente, Nombre paciente>
     private HashMap<String, String> pacientesConServicio; 
+    
+    private int numeroCitas;
 
     public EPS(String ipServidorCitas, int puerto, String nombre, 
-            HashMap<String, String> pacientesConServicio) throws RemoteException {
+            HashMap<String, String> pacientesConServicio, int numeroCitas) throws RemoteException {
         
         this.ipServidorCitas = ipServidorCitas;
         this.puertoServidorCitas = puerto;
         this.nombre = nombre;
         this.pacientesConServicio = pacientesConServicio;
+        this.numeroCitas = numeroCitas;
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;

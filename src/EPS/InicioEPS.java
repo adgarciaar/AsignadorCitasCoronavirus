@@ -5,8 +5,13 @@
  */
 package EPS;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  *
@@ -14,24 +19,43 @@ import java.util.HashMap;
  */
 public class InicioEPS {
     
-    //public static void main(String args[]) {
-    public void iniciarEPS(String ipServidorCitas, int puertoServidorCitas) {  
-    
-        //String ipServidorCitas = "localhost";
-        //ipServidorCitas = "192.168.0.7";
-        //int puertoServidorCitas = 7771;
-        String nombreEPS = "MiEPS";
+    public void iniciarEPS(String ipServidorCitas, int puertoServidorCitas, String rutaArchivo) {
         
-        HashMap<String, String> pacientesConServicio;
-        pacientesConServicio = new HashMap<>();
+        List<String> instruccionesConfiguracion = new ArrayList<>();
         
-        pacientesConServicio.put("ID1", "Adrian");
-        pacientesConServicio.put("ID2", "Juan");
-        pacientesConServicio.put("ID4", "Andrea");
+        try {
+            
+            File myObj = new File(rutaArchivo);
+            try (Scanner myReader = new Scanner(myObj)) {
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    instruccionesConfiguracion.add(data.trim());
+                }
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: No se encontró archivo de configuración");
+            System.exit(1);
+        }
+        
+        String nombreEPS = instruccionesConfiguracion.get(0);
+        
+        int numeroCitas = Integer.parseInt(instruccionesConfiguracion.get(1));
+        
+        int numeroClientesEPS = Integer.parseInt(instruccionesConfiguracion.get(2));
+        
+        HashMap<String, String> pacientesConServicio = new HashMap<>();;
+        String[] datosPaciente;        
+        for (int i = 3; i < 3 + numeroClientesEPS; i++) {
+            datosPaciente = instruccionesConfiguracion.get(i).split("\t");
+            pacientesConServicio.put(datosPaciente[0], datosPaciente[1]); //id, nombre
+            System.out.println(datosPaciente[0]+" "+datosPaciente[1]);
+        }
         
         EPS cliente = null;
         try {
-            cliente = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, pacientesConServicio);
+            cliente = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, 
+                    pacientesConServicio, numeroCitas);
             cliente.registrarEPS();
         } catch (RemoteException ex) {
             System.out.println(ex.toString());

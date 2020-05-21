@@ -14,9 +14,7 @@ import java.rmi.registry.Registry;
  */
 public class InicioINS {
    
-    public void iniciarINS(int puerto){
-        
-        //int puerto = 7770;
+    public void iniciarINS(int puerto){   
         
         InterfaceINS servicio = null;
         try {
