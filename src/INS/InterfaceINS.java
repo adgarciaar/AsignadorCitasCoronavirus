@@ -6,6 +6,7 @@
 package INS;
 
 import Entidades.Paciente;
+import GUI.GUI_INS;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -16,5 +17,6 @@ import java.rmi.RemoteException;
 public interface InterfaceINS extends Remote {
     
     public int evaluarPaciente(Paciente paciente) throws RemoteException;
+    public void referenciarGUI(GUI_INS gui) throws RemoteException;
     
 }

@@ -34,7 +34,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     private String ipServidorINS;
     private int puertoINS;
     
-    GUIServidorCitas gui;
+    private GUIServidorCitas gui;
 
     public ServidorCitas(int puerto, String ipServidorINS, int puertoINS) throws RemoteException{
         this.puerto = puerto;
@@ -57,7 +57,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada                
                 this.listaEPSs.put(nombreEPS, ipEPS);
                 System.out.println("Registrada la EPS "+nombreEPS);
-                this.gui.addRowToJTableEPS(this.listaEPSs);
+                this.gui.addRowToJTableEPS(nombreEPS, ipEPS);
                 return true;
             }else{
                 System.out.println("La EPS "+nombreEPS+" ya se está registrada");

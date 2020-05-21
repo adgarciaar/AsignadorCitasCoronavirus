@@ -6,7 +6,6 @@
 package GUI;
 
 import ServidorCitas.InterfaceServidorCitas;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import javax.swing.table.DefaultTableModel;
 
@@ -22,9 +21,19 @@ public class GUIServidorCitas extends javax.swing.JFrame {
      * Creates new form GUIServidorCitas
      * @param servidorCitas
      */
-    public GUIServidorCitas(InterfaceServidorCitas servidorCitas) {
+    public GUIServidorCitas(InterfaceServidorCitas servidorCitas) {        
         initComponents();        
         this.servidorCitas = servidorCitas;
+        
+        DefaultTableModel model = (DefaultTableModel) jTablePacientes.getModel();
+        for( int i = model.getRowCount() - 1; i >= 0; i-- ){
+             model.removeRow(i);
+        }
+        
+        DefaultTableModel model2 = (DefaultTableModel) jTableEPS.getModel();
+        for( int i = model2.getRowCount() - 1; i >= 0; i-- ){
+             model2.removeRow(i);
+        }
     }
 
     /**
@@ -184,27 +193,18 @@ public class GUIServidorCitas extends javax.swing.JFrame {
         });
     }
     
-    public void addRowToJTableEPS(HashMap<String, String> listaEPSs){
-        
-        //ArrayList<> list = (ArrayList<Pais>)paises;
+    public void addRowToJTableEPS(String nombre, String ip){        
         DefaultTableModel model = (DefaultTableModel) jTableEPS.getModel();
-        Object rowData[] = new Object[2];
-        for( int i = model.getRowCount() - 1; i >= 0; i-- ){
-             model.removeRow(i);
-        }
-        for (HashMap.Entry<String, String> entry : listaEPSs.entrySet()) {   
-            rowData[0] = entry.getKey();
-            rowData[1] = entry.getValue();
-            model.addRow(rowData); 
-        }
-                
+        Object rowData[] = new Object[2];        
+        rowData[0] = nombre;
+        rowData[1] = ip;
+        model.addRow(rowData);                  
     }
     
     public void addRowToJTablePacientes(HashMap<String, String> listaPacientes){
         
-        //ArrayList<> list = (ArrayList<Pais>)paises;
         DefaultTableModel model = (DefaultTableModel) jTablePacientes.getModel();
-        Object rowData[] = new Object[2];
+        Object rowData[] = new Object[2];        
         for( int i = model.getRowCount() - 1; i >= 0; i-- ){
              model.removeRow(i);
         }

@@ -6,6 +6,7 @@
 package INS;
 
 import Entidades.Paciente;
+import GUI.GUI_INS;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -19,6 +20,8 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
     
     private int puerto;
     private HashMap<String, String> reportes;
+    
+    private GUI_INS gui;
 
     public INS(int puerto) throws RemoteException{
         this.puerto = puerto;
@@ -43,10 +46,18 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
             }
         }
         
+        this.gui.addRowToJTablePacientes(paciente.getDocumento(), paciente.getNombre(), puntaje);
+        
         System.out.println("Paciente "+paciente.getNombre()+" con documento "
                 +paciente.getDocumento()+" fue evaluado y "
                 + "obtuvo "+puntaje+" puntaje");
+        
         return puntaje;
+    }
+
+    @Override
+    public void referenciarGUI(GUI_INS gui) throws RemoteException {
+        this.gui = gui;
     }
     
 }

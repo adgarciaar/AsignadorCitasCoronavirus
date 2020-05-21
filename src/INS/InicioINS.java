@@ -5,6 +5,7 @@
  */
 package INS;
 
+import GUI.GUI_INS;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 
@@ -27,6 +28,12 @@ public class InicioINS {
             Registry r = java.rmi.registry.LocateRegistry.createRegistry(puerto);       
             r.bind("ServicioINS", servicio);
             System.out.println("Servidor INS activo");
+            
+            GUI_INS gui = new GUI_INS(servicio);
+            servicio.referenciarGUI(gui);
+            gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
+            gui.setVisible(true);
+            
         } catch (Exception e) {
             System.out.println(e);
         }        
