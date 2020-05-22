@@ -49,34 +49,44 @@ public class InicioGrupoPacientes {
         
         String[] datosPaciente;      
         String[] sintomasPaciente;  
-        int numeroSintomas;
+        String[] patologiasAntecedentesPaciente;
+        int numeroSintomas, numeroPatologias;
         Paciente paciente;
         
-        for (int i = 2; i < 2 + numeroPacientes*2; i+=2) {      
+        for (int i = 2; i < 2 + numeroPacientes*3; i+=3) {      
             
             datosPaciente = instruccionesConfiguracion.get(i).split("\t");
+            
             sintomasPaciente = instruccionesConfiguracion.get(i+1).split("\t");
             numeroSintomas = Integer.parseInt(sintomasPaciente[0]);
+            
+            patologiasAntecedentesPaciente = instruccionesConfiguracion.get(i+2).split("\t");
+            numeroPatologias = Integer.parseInt(patologiasAntecedentesPaciente[0]);
             
             paciente = new Paciente();
             paciente.setDocumento(datosPaciente[0]);
             paciente.setNombre(datosPaciente[1]);
+            System.out.println("\n"+datosPaciente[1]+"\n");
             paciente.setEdad( Integer.parseInt(datosPaciente[2]) );
             paciente.setEPS( datosPaciente[3] );
             
             for (int j = 1; j < 1 + numeroSintomas; j++) {   
                 paciente.agregarSintoma( sintomasPaciente[j] );
+                System.out.println("Síntoma: "+sintomasPaciente[j]);
+            }
+            for (int j = 1; j < 1 + numeroPatologias; j++) {   
+                paciente.agregarPatologia( patologiasAntecedentesPaciente[j] );
+                System.out.println("Patologia/Antecedente: "+patologiasAntecedentesPaciente[j]);
             }
             
             pacientes.put(paciente.getDocumento(), paciente);            
         }
         
-        //System.out.println(pacientes);
+        System.out.println(pacientes);
         
-        GrupoPacientes grupoPacientes = null;
         try {
-            grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
-            grupoPacientes.registrarPacientes();
+            GrupoPacientes grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
+            //grupoPacientes.solicitarCitas();
         } catch (RemoteException ex) {
             System.out.println(ex.toString());
         }

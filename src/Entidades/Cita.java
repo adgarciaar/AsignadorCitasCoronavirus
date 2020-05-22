@@ -13,6 +13,26 @@ import java.io.Serializable;
  */
 public class Cita implements Serializable{
     
+    private String idCita;
     private String documentoPaciente;
+
+    public Cita() {
+    }
+
+    public String getIdCita() {
+        return idCita;
+    }
+
+    public void setIdCita(String idCita) {
+        this.idCita = idCita;
+    }
+
+    public String getDocumentoPaciente() {
+        return documentoPaciente;
+    }
+
+    public void setDocumentoPaciente(String documentoPaciente) {
+        this.documentoPaciente = documentoPaciente;
+    }
     
 }

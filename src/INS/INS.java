@@ -20,12 +20,54 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
     
     private int puerto;
     private HashMap<String, String> reportes;
+    //duplas <Síntoma, Gravedad>
+    private HashMap<String, String> gravedadSintomas;
+    //duplas <Patología, Gravedad>
+    private HashMap<String, String> gravedadPatologiasAntecedentes;
     
     private GUI_INS gui;
 
     public INS(int puerto) throws RemoteException{
         this.puerto = puerto;
-        reportes = new HashMap<>();
+        this.reportes = new HashMap<>();
+        this.gravedadSintomas = new HashMap<>();
+        this.gravedadPatologiasAntecedentes = new HashMap<>();
+    }
+    
+    private void establecerGravedadSintomasPatologiasAntecedentes(){
+        
+        //síntomas
+        
+        //leves
+        this.gravedadSintomas.put("Fiebre", "Leve");
+        this.gravedadSintomas.put("Tos", "Leve");
+        this.gravedadSintomas.put("Cansancio", "Leve");
+        this.gravedadSintomas.put("Dolor", "Leve");
+        //graves
+        this.gravedadSintomas.put("Falta de aire y dificultad para respirar", "Grave");
+        this.gravedadSintomas.put("Insuficiencia pulmonar", "Grave");
+        this.gravedadSintomas.put("Shock séptico", "Grave");
+        this.gravedadSintomas.put("Falla multiorgánica", "Grave");
+        
+        //patologías y antecedentes
+        
+        this.gravedadPatologiasAntecedentes.put("Sinusitis", "Leve");
+        this.gravedadPatologiasAntecedentes.put("Rinitis", "Leve");
+        this.gravedadPatologiasAntecedentes.put("Obesidad leve", "Leve");
+        this.gravedadPatologiasAntecedentes.put("Embarazo", "Moderado");        
+        //graves
+        this.gravedadPatologiasAntecedentes.put("Diabetes", "Grave");
+        this.gravedadPatologiasAntecedentes.put("EPOC", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Asma", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Cáncer", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Accidente cerebrovascular", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Presión arterial alta", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Enfermedad renal crónica", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Enfermedad hepática", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Cirugía del corazón", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Cirugía de pulmón", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Sistema inmunitario deprimido", "Grave");
+        this.gravedadPatologiasAntecedentes.put("Obesidad grave", "Grave");
     }
     
     public void crearGUI() throws RemoteException{
@@ -38,25 +80,140 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
     public int evaluarPaciente(Paciente paciente) throws RemoteException {
         
         int puntaje = 0;  
-        String sintoma;
+        
+        //60 puntos-------------
+        
+        //20 puntos -> síntomas leves
+        //5 por cada síntoma leve
+        
+        //20 puntos -> edad
+        //dependiendo del rango de edad
+        
+        //20 puntos -> patologías leves y moderadas
+        //5 por cada patología leve y 10 para moderada, máximo 20 puntos
+        
+        //40 puntos-------------
+        
+        //puntos dependiendo de rango de edad, por encima de 65 años
+        //12 por síntoma grave
+        //12 por patologías/antecedentes graves
+        //máximo 40 puntos
+        
+        String sintoma, patologia_antecedente;
+        
         List<String> sintomas = paciente.getSintomas();
+        List<String> patologias_antecedentes = paciente.getPatologias_antecedentes();
+        int edad = paciente.getEdad();
+        
+        //60 puntos-------------
+        
+        //Síntomas leves (máximo 20 puntos)
+        String tipoSintoma;
         for(int i=0; i<sintomas.size(); i++){
             sintoma = sintomas.get(i);
-            switch (sintoma) {
-                case "bien":
-                    puntaje = puntaje + 1;
-                    break;
-                case "enfermo":
-                    puntaje = puntaje + 70;
-                    break;
+            tipoSintoma = this.gravedadSintomas.get(sintoma);            
+            if( tipoSintoma != null ){
+                if(tipoSintoma.equals("Leve")){
+                    puntaje += 5;
+                }
             }
         }
+        
+        //Edad (máximo 20 puntos)
+        if (edad <= 5) {
+            puntaje += 20;
+        }
+        if (edad > 5 && edad < 20) {
+            puntaje += 5;
+        }
+        if (edad > 20 && edad < 40) {
+            puntaje += 8;
+        }
+        if (edad > 40 && edad < 65) {
+            puntaje += 14;
+        }
+        if (edad >= 65) {
+            puntaje += 20;
+        }
+        
+        //Patologías leves y moderadas (máximo 20 puntos)        
+        String tipoPatologiaAntecedente;
+        int puntajePatologiasLevesModeradas = 0;
+        for(int i=0; i<sintomas.size(); i++){
+            patologia_antecedente = patologias_antecedentes.get(i);
+            tipoPatologiaAntecedente = this.gravedadPatologiasAntecedentes.get(patologia_antecedente);
+            if( tipoPatologiaAntecedente != null ){
+                if(tipoPatologiaAntecedente.equals("Leve")){
+                    puntajePatologiasLevesModeradas += 5;
+                }
+                if(tipoPatologiaAntecedente.equals("Moderado")){
+                    puntajePatologiasLevesModeradas += 10;
+                }
+            }
+        }   
+        if(puntajePatologiasLevesModeradas > 20){
+            puntajePatologiasLevesModeradas = 20;
+        }
+        puntaje += puntajePatologiasLevesModeradas;   
+        
+        
+        //40 puntos-------------
+        
+        int puntajeAdicional = 0;
+        
+        //Edad
+        if (edad >= 65) {
+            if (edad >= 65 && edad < 75) {
+                puntajeAdicional += 8;
+            }
+            if (edad >= 75 && edad < 85) {
+                puntajeAdicional += 12;
+            }
+            if (edad >= 85) {
+                puntajeAdicional += 16;
+            }
+        }
+        
+        //Síntomas graves
+        for(int i=0; i<sintomas.size(); i++){
+            sintoma = sintomas.get(i);
+            tipoSintoma = this.gravedadSintomas.get(sintoma);            
+            if( tipoSintoma != null ){
+                if(tipoSintoma.equals("Grave")){
+                    puntajeAdicional += 12;
+                }
+            }
+        }
+        
+        //Patologías/antecedentes graves
+        for(int i=0; i<sintomas.size(); i++){
+            patologia_antecedente = patologias_antecedentes.get(i);
+            tipoPatologiaAntecedente = this.gravedadPatologiasAntecedentes.get(patologia_antecedente);
+            if( tipoPatologiaAntecedente != null ){
+                if(tipoPatologiaAntecedente.equals("Grave")){
+                    puntajeAdicional += 12;
+                }                
+            }
+        }
+        
+        if(puntajeAdicional > 40){
+            puntajeAdicional = 40;
+        }
+        puntaje += puntajeAdicional;   
+        
         
         this.gui.addRowToJTablePacientes(paciente.getDocumento(), paciente.getNombre(), puntaje);
         
         System.out.println("Paciente "+paciente.getNombre()+" con documento "
                 +paciente.getDocumento()+" fue evaluado y "
                 + "obtuvo "+puntaje+" puntaje");
+        
+        //Retardo forzado de 1 segundo
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("Error: "+e.toString());
+        }
         
         return puntaje;
     }

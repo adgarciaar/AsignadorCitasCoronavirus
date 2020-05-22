@@ -52,9 +52,8 @@ public class InicioEPS {
             System.out.println(datosPaciente[0]+" "+datosPaciente[1]);
         }
         
-        EPS cliente = null;
         try {
-            cliente = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, 
+            EPS cliente = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, 
                     pacientesConServicio, numeroCitas);
             cliente.registrarEPS();
         } catch (RemoteException ex) {

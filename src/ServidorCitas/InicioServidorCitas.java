@@ -5,7 +5,6 @@
  */
 package ServidorCitas;
 
-import GUI.GUIServidorCitas;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 

@@ -20,9 +20,11 @@ public class Paciente implements Serializable{
     private int edad;
     private String EPS;
     private List<String> sintomas;
+    private List<String> patologias_antecedentes;
 
     public Paciente() {
         this.sintomas = new ArrayList<>();
+        this.patologias_antecedentes = new ArrayList<>();
     }
 
     public String getDocumento() {
@@ -61,15 +63,8 @@ public class Paciente implements Serializable{
         this.sintomas.add(sintoma);
     }
     
-    public boolean tieneSintoma(String sintoma){
-        boolean retorno = false;
-        for (int i = 0; i < this.sintomas.size(); i++) {
-            if(sintoma.equals(this.sintomas.get(i))){
-                retorno = true;
-                break;
-            }
-        }
-        return retorno;
+    public void agregarPatologia(String patologia){
+        this.patologias_antecedentes.add(patologia);
     }
 
     public String getEPS() {
@@ -78,6 +73,14 @@ public class Paciente implements Serializable{
 
     public void setEPS(String EPS) {
         this.EPS = EPS;
+    }
+
+    public List<String> getPatologias_antecedentes() {
+        return patologias_antecedentes;
+    }
+
+    public void setPatologias_antecedentes(List<String> patologias_antecedentes) {
+        this.patologias_antecedentes = patologias_antecedentes;
     }
     
 }

@@ -5,7 +5,6 @@
  */
 package INS;
 
-import GUI.GUI_INS;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 

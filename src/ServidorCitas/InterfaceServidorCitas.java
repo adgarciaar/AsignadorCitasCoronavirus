@@ -5,6 +5,7 @@
  */
 package ServidorCitas;
 
+import Entidades.Cita;
 import Entidades.Paciente;
 import GUI.GUIServidorCitas;
 import java.rmi.Remote;
@@ -16,6 +17,8 @@ import java.util.HashMap;
  * @author adgar
  */
 public interface InterfaceServidorCitas extends Remote{
+    
+    public Cita obtenerCita(Paciente paciente) throws RemoteException;
     
     public void registrarPacientes(HashMap<String, Paciente> pacientes, 
             String ipGrupo, String idGrupo) throws RemoteException;

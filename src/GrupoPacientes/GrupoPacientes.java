@@ -82,10 +82,11 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         this.gui.addRowToJTablePacientes(this.pacientes, situacionPacientes);
     }
     
-    public void registrarPacientes() {
+    public void solicitarCitas() {
         
         try {
             
+            /*
             this.registrarServicioRegistro();
             
             String nombreServicio = "//"+this.ipServidorCitas+":"
@@ -96,17 +97,30 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             
             serverInterface.registrarPacientes(this.pacientes, 
                     this.ipGrupoPacientes, this.idGrupo);
-            
-            /*if(retorno){
-                System.out.println("Los pacientes se registraron exitosamente");
-                
-            }else{
-                System.out.println("Error: no se pudieron registrar los pacientes");
-                System.exit(1);
-            }
             */
+            
+            for (HashMap.Entry<String, Paciente> entry : this.pacientes.entrySet()) {                
+                Runnable tarea = () -> { this.solicitarCitaPaciente(entry.getValue()) ;};      
+                Thread hilo = new Thread(tarea);
+                hilo.start();
+            }
+            
         } catch (Exception e) {
             System.out.println(this.pacientes.size());
+            System.out.println("Error: "+e.toString());
+        }
+        
+    }
+    
+    private void solicitarCitaPaciente(Paciente paciente){
+        
+        String nombreServicio = "//"+this.ipServidorCitas+":"
+                    +this.puertoServidorCitas+"/ServAsignacionCitas";
+            
+        try {
+            InterfaceServidorCitas serverInterface =
+                    (InterfaceServidorCitas) Naming.lookup(nombreServicio);
+        } catch (Exception e) {
             System.out.println("Error: "+e.toString());
         }
         
@@ -116,19 +130,6 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     public void informarAsignacionCita() throws RemoteException {
         System.out.println("Cita asignada");
     }
-    
-    /*public void pedirCita(){
-        
-        try {
-            String nombreServicio = "//"+this.ipServidorCitas+":"+this.puertoServidorCitas+"/ServAsignacionCitas";
-            InterfaceServidorCitas serverInterface = (InterfaceServidorCitas) Naming.lookup(nombreServicio);
-            boolean sePuede = serverInterface.evaluarUnPaciente("Adrian");
-            //String miRetorno = serverInterface.registrarEPS(this.nombre);
-            System.out.println("Se puede? "+sePuede);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }*/
 
     @Override
     public void recibirMensaje(String mensaje) throws RemoteException {

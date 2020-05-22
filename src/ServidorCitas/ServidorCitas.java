@@ -6,13 +6,16 @@
 package ServidorCitas;
 
 import EPS.InterfaceEPS;
+import Entidades.Cita;
 import Entidades.Paciente;
+import Entidades.Transaccion;
 import GUI.GUIServidorCitas;
 import GrupoPacientes.InterfaceGrupoPacientes;
 import INS.InterfaceINS;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -35,6 +38,8 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     private int puertoINS;
     
     private GUIServidorCitas gui;
+    
+    private ArrayList<Transaccion> transacciones;
 
     public ServidorCitas(int puerto, String ipServidorINS, int puertoINS) throws RemoteException{
         this.puerto = puerto;
@@ -47,12 +52,14 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         this.listaIPsPacientes = new HashMap<>();
         this.listaPacientes = new HashMap<>();
         this.listaPacientesGrupos = new HashMap<>();
+        
+        this.transacciones = new ArrayList<>();
     }
 
     @Override
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException {
         
-        synchronized(this) {
+        synchronized(this.listaEPSs) {
             
             if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada                
                 this.listaEPSs.put(nombreEPS, ipEPS);
@@ -70,6 +77,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     public void registrarPacientes(HashMap<String, Paciente> pacientes, 
             String ipGrupo, String idGrupo) throws RemoteException {
         
+        /*
         boolean registroCorrecto = true;
         
         synchronized(this) {
@@ -113,9 +121,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 //return false;
             }
             //this.listaPacientes.addAll(pacientes);
-        }        
+        }   
+        */
     }
     
+    /*
     public void evaluarPaciente(Paciente paciente) {
         
         try {
@@ -130,9 +140,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             
         }
         
-    }
+    }*/
     
     public void verificarEPSPacientes(HashMap<String, Paciente> pacientes){
+        
+        /*
         synchronized(this) {
             for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) {                
                 String documentoPaciente = entry.getKey();
@@ -152,6 +164,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             }
             this.asignarCitas();
         }
+        */
     }
     
     public boolean verificarEPSPaciente(String documentoPaciente, String nombreEPS, String ipEPS){     
@@ -167,11 +180,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         
     }
     
+    /*
     public void enviarMensajeGrupoPacientes(String mensaje, String ipGrupo, String idGrupo){
         
         try {
-            String nombreServicio = "//"+ipGrupo+":"+this.puerto+"/ServicioPacientes"+idGrupo;
-            //System.out.println(nombreServicio);
+            String nombreServicio = "//"+ipGrupo+":"+this.puerto+"/ServicioPacientes"+idGrupo;            
             InterfaceGrupoPacientes serverInterface = 
                     (InterfaceGrupoPacientes) Naming.lookup(nombreServicio);
             
@@ -180,17 +193,65 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             System.out.println(e.toString());
         }
         
-    }
+    }*/
     
-    public void asignarCitas(){
+    /*public void asignarCitas(){
         System.out.println("Asignando citas");
-    }
+    }*/
 
     @Override
     public void crearGUI() throws RemoteException {
         this.gui = new GUIServidorCitas(); 
         this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
         this.gui.setVisible(true);
+    }
+
+    @Override
+    public Cita obtenerCita(Paciente paciente) {
+        
+        Cita cita = null;
+        
+        Transaccion transaccion = new Transaccion(paciente);
+        
+        synchronized(this.transacciones) {
+            this.transacciones.add(transaccion);
+            this.transacciones.sort(null);
+        }
+        
+        boolean transaccionConsumada = false;
+        
+        while(!transaccionConsumada){
+            if(true){
+                synchronized(this.transacciones) {
+                    //ver si esta transaccion es la siguiente en la lista
+                    if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
+                        
+                        String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
+                        boolean pacienteCuentaConEPS = 
+                                this.verificarEPSPaciente(paciente.getDocumento(), 
+                                        paciente.getEPS(), ipEPSPaciente);
+                        
+                        if(pacienteCuentaConEPS){
+                            //cita = rmi.consumarCita(t);
+                            this.transacciones.remove(0);
+                            transaccionConsumada = true;
+                            this.transacciones.notifyAll();
+                        }else{ //Abortar la transacción
+                            System.out.println("Transacción abortada");
+                        }
+                    } else {
+                        try {
+                            this.transacciones.wait();
+                        } catch (InterruptedException e) {
+                            System.out.println("Error: "+e.toString());
+                        }
+
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
     
 }

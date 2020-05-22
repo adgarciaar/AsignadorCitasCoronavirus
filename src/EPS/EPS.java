@@ -5,6 +5,8 @@
  */
 package EPS;
 
+import Entidades.Cita;
+import Entidades.Paciente;
 import GUI.GUI_EPS;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;
@@ -135,5 +137,12 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
             return false;
         }        
     }
+
+    @Override
+    public Cita programarCita(Paciente paciente) throws RemoteException {
+        return null;
+    }
+    
+    
     
 }
