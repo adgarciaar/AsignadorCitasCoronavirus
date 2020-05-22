@@ -15,7 +15,10 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -26,6 +29,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     private String ipEPS;
     private String ipServidorCitas;
     private int puertoServidorCitas;
+    private List <Cita> citas;
     
     private String nombre;
     //mapa con duplas <Documento paciente, Nombre paciente>
@@ -46,6 +50,8 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         this.pacientesConServicio = pacientesConServicio;
         this.numeroCitas = numeroCitas;
         this.citasPacientes = new HashMap<>();
+        this.citas = new ArrayList<>();
+
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -60,9 +66,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     }
     
     public void generarCitas(){
-        for (int i = 0; i < this.numeroCitas; i++) {
-            citasPacientes.put("Cita"+i, null);
-        }
+        
     }
     
     public void crearGUI(){
@@ -92,7 +96,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
             System.out.println(e.toString());
         }
         
-        this.generarCitas();
+       // this.generarCitas();
         this.crearGUI();
     }
     
@@ -143,6 +147,24 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         return null;
     }
     
+    public List <Cita> entregarCalendario() throws RemoteException{
+            return this.citas;                
+    }
+    
+     public void actualizarCalendaro(List <Cita> citas) throws RemoteException {
+        this.citas = citas;
+    }
+     
+     public boolean puedeConsumar(){
+         
+         Random r = new Random();
+        double rand = r.nextInt(100) + r.nextDouble();
+        if (rand < 0.1) {
+            return false;
+        } else {
+            return true;
+        }
+     }
     
     
 }
