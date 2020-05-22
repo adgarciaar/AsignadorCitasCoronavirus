@@ -6,6 +6,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +82,10 @@ public class Paciente implements Serializable{
 
     public void setPatologias_antecedentes(List<String> patologias_antecedentes) {
         this.patologias_antecedentes = patologias_antecedentes;
+    }
+
+    public ChronoLocalDateTime<?> getTimeStampEscritura() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

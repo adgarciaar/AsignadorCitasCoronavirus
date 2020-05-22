@@ -11,13 +11,29 @@ import java.io.Serializable;
  *
  * @author adgar
  */
-public class Cita implements Serializable{
+public class Cita implements Serializable , Comparable<Cita>{
     
     private String idCita;
     private String documentoPaciente;
+    private int prioridad;
+    private int dia;
+    private int hora;
+    
+    
 
     public Cita() {
+        
     }
+
+    public Cita(String documentoPaciente, int prioridad, int dia, int hora) {
+        this.documentoPaciente = documentoPaciente;
+        this.prioridad = prioridad;
+        this.dia = dia;
+        this.hora = hora;
+        this.idCita = "Cita_d"+this.dia+"_h"+this.hora;
+    }
+    
+    
 
     public String getIdCita() {
         return idCita;
@@ -34,5 +50,42 @@ public class Cita implements Serializable{
     public void setDocumentoPaciente(String documentoPaciente) {
         this.documentoPaciente = documentoPaciente;
     }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+    
+    
+
+    public int getDia() {
+        return dia;
+    }
+
+    public void setDia(int dia) {
+        this.dia = dia;
+    }
+
+    public int getHora() {
+        return hora;
+    }
+
+    public void setHora(int hora) {
+        this.hora = hora;
+    }
+
+    @Override
+    public int compareTo(Cita o) {
+        
+        if (this.dia != o.getDia()) {
+            return this.dia - o.getDia();
+        }
+        else
+        return this.hora - o.getHora();
+    }
+    
     
 }

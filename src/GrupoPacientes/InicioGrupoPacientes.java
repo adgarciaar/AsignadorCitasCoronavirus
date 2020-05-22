@@ -53,6 +53,9 @@ public class InicioGrupoPacientes {
         int numeroSintomas, numeroPatologias;
         Paciente paciente;
         
+        System.out.println("Grupo de pacientes "+idGrupo+"\n");
+        System.out.println("Pacientes en este grupo");
+        
         for (int i = 2; i < 2 + numeroPacientes*3; i+=3) {      
             
             datosPaciente = instruccionesConfiguracion.get(i).split("\t");
@@ -66,7 +69,7 @@ public class InicioGrupoPacientes {
             paciente = new Paciente();
             paciente.setDocumento(datosPaciente[0]);
             paciente.setNombre(datosPaciente[1]);
-            System.out.println("\n"+datosPaciente[1]+"\n");
+            System.out.println("\n"+datosPaciente[1]);
             paciente.setEdad( Integer.parseInt(datosPaciente[2]) );
             paciente.setEPS( datosPaciente[3] );
             
@@ -76,19 +79,19 @@ public class InicioGrupoPacientes {
             }
             for (int j = 1; j < 1 + numeroPatologias; j++) {   
                 paciente.agregarPatologia( patologiasAntecedentesPaciente[j] );
-                System.out.println("Patologia/Antecedente: "+patologiasAntecedentesPaciente[j]);
+                System.out.println("Patología/Antecedente: "+patologiasAntecedentesPaciente[j]);
             }
             
             pacientes.put(paciente.getDocumento(), paciente);            
         }
         
-        System.out.println(pacientes);
+        //System.out.println("\n"+pacientes+"\n");
         
         try {
             GrupoPacientes grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
-            //grupoPacientes.solicitarCitas();
-        } catch (RemoteException ex) {
-            System.out.println(ex.toString());
+            grupoPacientes.solicitarCitas();
+        } catch (RemoteException e) {
+            System.out.println("Error: "+e.toString());
         }
         
     }

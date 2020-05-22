@@ -6,9 +6,9 @@
 package EPS;
 
 import Entidades.Cita;
-import Entidades.Paciente;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  *
@@ -16,8 +16,9 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceEPS extends Remote{
     
-    public Cita programarCita(Paciente paciente) throws RemoteException;
     public boolean pacienteTieneCobertura(String documentoPaciente) throws RemoteException;
-    public void avisar() throws RemoteException;
+    public List<Cita> entregarCalendario() throws RemoteException;
+    public void actualizarCalendaro(List <Cita> citas) throws RemoteException;
+    public boolean puedeConsumar() throws RemoteException;    
     
 }

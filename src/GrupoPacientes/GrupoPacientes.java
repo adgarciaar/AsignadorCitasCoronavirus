@@ -5,6 +5,7 @@
  */
 package GrupoPacientes;
 
+import Entidades.Cita;
 import Entidades.Paciente;
 import GUI.GUIGrupoPacientes;
 import ServidorCitas.InterfaceServidorCitas;
@@ -53,6 +54,8 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         }        
         this.ipGrupoPacientes = inetAddress.getHostAddress();
         
+        this.registrarServicioRegistro();
+        this.crearGUI();
     }
     
     private void registrarServicioRegistro(){
@@ -72,7 +75,6 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             System.out.println(e.toString());
         }
         
-        this.crearGUI();
     }
     
     public void crearGUI(){
@@ -99,7 +101,8 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
                     this.ipGrupoPacientes, this.idGrupo);
             */
             
-            for (HashMap.Entry<String, Paciente> entry : this.pacientes.entrySet()) {                
+            for (HashMap.Entry<String, Paciente> entry : this.pacientes.entrySet()) { 
+                //iniciar un hilo para solicitar la cita, por cada paciente
                 Runnable tarea = () -> { this.solicitarCitaPaciente(entry.getValue()) ;};      
                 Thread hilo = new Thread(tarea);
                 hilo.start();
@@ -118,8 +121,10 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
                     +this.puertoServidorCitas+"/ServAsignacionCitas";
             
         try {
-            InterfaceServidorCitas serverInterface =
-                    (InterfaceServidorCitas) Naming.lookup(nombreServicio);
+            //InterfaceServidorCitas serverInterface =
+             //       (InterfaceServidorCitas) Naming.lookup(nombreServicio);
+            //Cita cita = serverInterface.obtenerCita(paciente);
+            System.out.println("Solicitada cita para paciente "+paciente.getNombre());
         } catch (Exception e) {
             System.out.println("Error: "+e.toString());
         }

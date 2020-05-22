@@ -7,6 +7,7 @@ package ServidorCitas;
 
 import EPS.InterfaceEPS;
 import Entidades.Cita;
+import Entidades.MarcasTiempoEPS;
 import Entidades.Paciente;
 import Entidades.Transaccion;
 import GUI.GUIServidorCitas;
@@ -16,67 +17,74 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
  * @author adgar
  */
 public class ServidorCitas extends UnicastRemoteObject implements InterfaceServidorCitas {
-    
+
     private int puerto;
     //mapa con duplas <EPS, IP de la máquina>
     private HashMap<String, String> listaEPSs;
+    //maoa con duplas <EPS, MarcaTiempoEPS>
+    private HashMap<String, MarcasTiempoEPS> marcasTiempoEPSs;
     //mapa con duplas <Documento paciente, IP de la máquina de su grupo>
     private HashMap<String, String> listaIPsPacientes;
     //mapa con duplas <Documento paciente, Paciente>
     private HashMap<String, Paciente> listaPacientes;
     //mapa con duplas <Documento paciente, Id de su grupo>
     private HashMap<String, String> listaPacientesGrupos;
-    
+
     private String ipServidorINS;
     private int puertoINS;
-    
+
     private GUIServidorCitas gui;
-    
+
     private ArrayList<Transaccion> transacciones;
 
-    public ServidorCitas(int puerto, String ipServidorINS, int puertoINS) throws RemoteException{
+    public ServidorCitas(int puerto, String ipServidorINS, int puertoINS) throws RemoteException {
         this.puerto = puerto;
         //this.ipServidorINS = "localhost";
         //this.puertoINS = 7770;
         this.ipServidorINS = ipServidorINS;
         this.puertoINS = puertoINS;
-        
+
         this.listaEPSs = new HashMap<>();
+        this.marcasTiempoEPSs = new HashMap<>();
         this.listaIPsPacientes = new HashMap<>();
         this.listaPacientes = new HashMap<>();
         this.listaPacientesGrupos = new HashMap<>();
-        
+
         this.transacciones = new ArrayList<>();
+
     }
 
     @Override
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException {
-        
-        synchronized(this.listaEPSs) {
-            
-            if(this.listaEPSs.get(nombreEPS) == null){ //no está registrada                
+
+        synchronized (this.listaEPSs) {
+
+            if (this.listaEPSs.get(nombreEPS) == null) { //no está registrada                
                 this.listaEPSs.put(nombreEPS, ipEPS);
-                System.out.println("Registrada la EPS "+nombreEPS);
+                this.marcasTiempoEPSs.put(nombreEPS, new MarcasTiempoEPS());
+                System.out.println("Registrada la EPS " + nombreEPS);
                 this.gui.addRowToJTableEPS(nombreEPS, ipEPS);
                 return true;
-            }else{
-                System.out.println("La EPS "+nombreEPS+" ya se está registrada");
+            } else {
+                System.out.println("La EPS " + nombreEPS + " ya se está registrada");
                 return false;
             }
-        }       
+        }
     }
 
     @Override
-    public void registrarPacientes(HashMap<String, Paciente> pacientes, 
+    public void registrarPacientes(HashMap<String, Paciente> pacientes,
             String ipGrupo, String idGrupo) throws RemoteException {
-        
+
         /*
         boolean registroCorrecto = true;
         
@@ -122,28 +130,28 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             }
             //this.listaPacientes.addAll(pacientes);
         }   
-        */
+         */
     }
-    
-    /*
-    public void evaluarPaciente(Paciente paciente) {
-        
+
+    public int evaluarPaciente(Paciente paciente) {
+
         try {
-            String nombreServicio = "//"+this.ipServidorINS+":"+this.puertoINS+"/ServicioINS";
+            String nombreServicio = "//" + this.ipServidorINS + ":" + this.puertoINS + "/ServicioINS";
             InterfaceINS serverInterface = (InterfaceINS) Naming.lookup(nombreServicio);
             int puntaje = serverInterface.evaluarPaciente(paciente);
             //return serverInterface.evaluarPaciente(nombrePaciente);   
-            System.out.println("Puntaje paciente "+paciente.getNombre()+" es "+puntaje);
-            
+            System.out.println("Puntaje paciente " + paciente.getNombre() + " es " + puntaje);
+            return puntaje;
+
         } catch (Exception e) {
             System.out.println(e);
-            
+            return -1;
+
         }
-        
-    }*/
-    
-    public void verificarEPSPacientes(HashMap<String, Paciente> pacientes){
-        
+    }
+
+    public void verificarEPSPacientes(HashMap<String, Paciente> pacientes) {
+
         /*
         synchronized(this) {
             for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) {                
@@ -164,22 +172,22 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             }
             this.asignarCitas();
         }
-        */
+         */
     }
-    
-    public boolean verificarEPSPaciente(String documentoPaciente, String nombreEPS, String ipEPS){     
-        
+
+    public boolean verificarEPSPaciente(String documentoPaciente, String nombreEPS, String ipEPS) {
+
         try {
-            String nombreServicio = "//"+ipEPS+":"+this.puerto+"/ServicioEPS"+nombreEPS;
-            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio); 
-            return serverInterface.pacienteTieneCobertura(documentoPaciente);            
+            String nombreServicio = "//" + ipEPS + ":" + this.puerto + "/ServicioEPS" + nombreEPS;
+            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
+            return serverInterface.pacienteTieneCobertura(documentoPaciente);
         } catch (Exception e) {
-            System.out.println(e.toString());        
+            System.out.println(e.toString());
             return false;
         }
-        
+
     }
-    
+
     /*
     public void enviarMensajeGrupoPacientes(String mensaje, String ipGrupo, String idGrupo){
         
@@ -194,64 +202,180 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         }
         
     }*/
-    
-    /*public void asignarCitas(){
+ /*public void asignarCitas(){
         System.out.println("Asignando citas");
     }*/
-
     @Override
     public void crearGUI() throws RemoteException {
-        this.gui = new GUIServidorCitas(); 
+        this.gui = new GUIServidorCitas();
         this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
         this.gui.setVisible(true);
     }
 
     @Override
     public Cita obtenerCita(Paciente paciente) {
-        
+
         Cita cita = null;
-        
+
         Transaccion transaccion = new Transaccion(paciente);
-        
-        synchronized(this.transacciones) {
+
+        synchronized (this.transacciones) {
             this.transacciones.add(transaccion);
             this.transacciones.sort(null);
         }
-        
-        boolean transaccionConsumada = false;
-        
-        while(!transaccionConsumada){
-            if(true){
-                synchronized(this.transacciones) {
-                    //ver si esta transaccion es la siguiente en la lista
-                    if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
-                        
-                        String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
-                        boolean pacienteCuentaConEPS = 
-                                this.verificarEPSPaciente(paciente.getDocumento(), 
-                                        paciente.getEPS(), ipEPSPaciente);
-                        
-                        if(pacienteCuentaConEPS){
-                            //cita = rmi.consumarCita(t);
-                            this.transacciones.remove(0);
-                            transaccionConsumada = true;
-                            this.transacciones.notifyAll();
-                        }else{ //Abortar la transacción
-                            System.out.println("Transacción abortada");
-                        }
-                    } else {
-                        try {
-                            this.transacciones.wait();
-                        } catch (InterruptedException e) {
-                            System.out.println("Error: "+e.toString());
-                        }
 
+        boolean transaccionConsumada = false;
+
+        while (!transaccionConsumada) {
+
+            synchronized (this.transacciones) {
+                //ver si esta transaccion es la siguiente en la lista
+                if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
+
+                    String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
+                    boolean pacienteCuentaConEPS
+                            = this.verificarEPSPaciente(paciente.getDocumento(),
+                                    paciente.getEPS(), ipEPSPaciente);
+
+                    if (pacienteCuentaConEPS) {
+                        boolean consumada = this.consumarCita(this.transacciones.get(0));
+                        this.transacciones.remove(0);
+                        if (!consumada) {
+                            transacciones.add(new Transaccion(paciente));
+                        }
+                        transaccionConsumada = consumada;
+                        this.transacciones.notifyAll();
+                    } else { //Abortar la transacción
+                        System.out.println("Transacción abortada");
                     }
+                } else {
+                    try {
+                        this.transacciones.wait();
+                    } catch (InterruptedException e) {
+                        System.out.println("Error: " + e.toString());
+                    }
+
                 }
             }
+
         }
-        
+
         return null;
     }
-    
+
+    public List<Cita> traerCalendario(String ipEPS, String nombreEPS) {
+        try {
+            String nombreServicio = "//" + ipEPS + ":" + this.puerto + "/ServicioEPS" + nombreEPS;
+            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
+            return serverInterface.entregarCalendario();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
+    }
+
+    public boolean consumarCita(Transaccion transaccion) {
+        synchronized (this) {
+            Paciente paciente = (Paciente) transaccion.getObjeto();
+            String EPSPaciente = paciente.getEPS();
+            String ipEPS = this.listaEPSs.get(EPSPaciente);
+            List<Cita> Calendario;
+            MarcasTiempoEPS marcasEPS = this.marcasTiempoEPSs.get(EPSPaciente);
+            if (transaccion.getTimeStamp().isAfter(marcasEPS.getMarcaEscritura())) {
+                //solicitar info citas eps
+                Calendario = traerCalendario(ipEPS, EPSPaciente);
+
+                marcasEPS.setMarcaLectura(transaccion.getTimeStamp());
+            } else {
+                System.out.println("Inconsistencia de concurrencia lectura del paciente:" + paciente.getDocumento());
+                return false;
+            }
+
+            if (transaccion.getTimeStamp().compareTo(marcasEPS.getMarcaLectura()) >= 0
+                    && transaccion.getTimeStamp().isAfter(marcasEPS.getMarcaEscritura())) {
+
+                //aumentar secuencia cita eps
+                //calcular prioridad
+                int prioridad = evaluarPaciente(paciente);
+                if (prioridad < 0) {
+                    return false;
+                }
+
+                int hora = Calendario.get(Calendario.size() - 1).getHora();
+                int dia = Calendario.get(Calendario.size() - 1).getDia();
+
+                if (prioridad >= 70 && prioridad < 90) {
+
+                    Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
+
+                }
+
+                if (prioridad >= 90) {
+
+                    int index = buscarMenorPrioridad(Calendario);
+                    Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
+                    Collections.swap(Calendario, index, Calendario.size() - 1);
+
+                }
+
+                Collections.sort(Calendario);
+
+                if (puedeConsumar(ipEPS, EPSPaciente)) {
+
+                    actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente);
+
+                } else {
+                    try {
+                        this.wait();
+                    } catch (Exception e) {
+                        System.out.println("Thread interrupted.");
+                    }
+                }
+
+                //notificat cita consumada
+            } else {
+                System.out.println("Inconsistencia de concurrencia escritura del paciente:" + paciente.getDocumento());
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    private int buscarMenorPrioridad(List<Cita> Calendario) {
+        int index = 0;
+        int i = 0;
+        boolean encontro = false;
+        while (!encontro) {
+            if (Calendario.get(i).getPrioridad() < 90) {
+                index = i;
+                encontro = true;
+            }
+            i++;
+
+        }
+        return index;
+    }
+
+    private void actualizarCalendarioEPS(List<Cita> Calendario, String ipEPS, String EPSPaciente) {
+        try {
+            String nombreServicio = "//" + ipEPS + ":" + this.puerto + "/ServicioEPS" + EPSPaciente;
+            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
+            serverInterface.actualizarCalendaro(Calendario);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private boolean puedeConsumar(String ipEPS, String EPSPaciente) {
+        try {
+            String nombreServicio = "//" + ipEPS + ":" + this.puerto + "/ServicioEPS" + EPSPaciente;
+            InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
+            return serverInterface.puedeConsumar();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return false;
+        }
+    }
+
 }
