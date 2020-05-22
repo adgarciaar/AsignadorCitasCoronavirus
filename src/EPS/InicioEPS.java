@@ -40,24 +40,31 @@ public class InicioEPS {
         
         String nombreEPS = instruccionesConfiguracion.get(0);
         
-        int numeroCitas = Integer.parseInt(instruccionesConfiguracion.get(1));
+        //int numeroCitas = Integer.parseInt(instruccionesConfiguracion.get(1));
         
-        int numeroClientesEPS = Integer.parseInt(instruccionesConfiguracion.get(2));
+        int numeroClientesEPS = Integer.parseInt(instruccionesConfiguracion.get(1));
         
         HashMap<String, String> pacientesConServicio = new HashMap<>();;
         String[] datosPaciente;        
-        for (int i = 3; i < 3 + numeroClientesEPS; i++) {
+        for (int i = 2; i < 2 + numeroClientesEPS; i++) {
             datosPaciente = instruccionesConfiguracion.get(i).split("\t");
             pacientesConServicio.put(datosPaciente[0], datosPaciente[1]); //id, nombre
-            System.out.println(datosPaciente[0]+" "+datosPaciente[1]);
+            //System.out.println(datosPaciente[0]+" "+datosPaciente[1]);
         }
         
         try {
-            EPS cliente = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, 
-                    pacientesConServicio, numeroCitas);
-            cliente.registrarEPS();
-        } catch (RemoteException ex) {
-            System.out.println(ex.toString());
+            EPS eps = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, 
+                    pacientesConServicio);
+            eps.registrarEPS();
+            
+            System.out.println("\nPacientes de la EPS");
+            for (HashMap.Entry<String, String> entry : pacientesConServicio.entrySet()) {            
+                System.out.println(entry.getKey()+" "+entry.getValue());
+            }
+            
+        } catch (RemoteException e) {
+            System.out.println("Error: "+e.toString());
+            System.exit(1);
         }        
     }
     

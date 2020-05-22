@@ -31,7 +31,8 @@ public class InicioINS {
             servicio.crearGUI();
             
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error: "+e.toString());
+            System.exit(1);
         }        
         
     }

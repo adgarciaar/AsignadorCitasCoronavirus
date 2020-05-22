@@ -1,14 +1,14 @@
 Grupo1
 4
 ID1	Adrian	22	MiEPS
-2	bien	enfermo
+2	Fiebre	Tos
 0
 ID2	Juan	22	MiEPS
-2	bien	enfermo
+2	Cansancio	Dolor
 0
 ID3	Christian	21	MiEPS
-1	enfermo
-1	diabetes
+1	Cansancio
+1	Diabetes
 ID4	Andrea	20	MiEPS
-1	bien
-2	diabetes	obesidad
+1	Insuficiencia pulmonar
+2	Asma	Cirugía del corazón

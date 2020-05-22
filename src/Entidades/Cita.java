@@ -30,6 +30,7 @@ public class Cita implements Serializable , Comparable<Cita>{
         this.prioridad = prioridad;
         this.dia = dia;
         this.hora = hora;
+        this.idCita = "Cita_d"+this.dia+"_h"+this.hora;
     }
     
     

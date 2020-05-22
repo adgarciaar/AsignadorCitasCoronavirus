@@ -35,23 +35,22 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     //mapa con duplas <Documento paciente, Nombre paciente>
     private HashMap<String, String> pacientesConServicio; 
     
-    private int numeroCitas;
+    //private int numeroCitas;
     //duplas <Id cita, Documento paciente con cita>
     private HashMap<String, String> citasPacientes;
     
     private GUI_EPS gui;
 
     public EPS(String ipServidorCitas, int puerto, String nombre, 
-            HashMap<String, String> pacientesConServicio, int numeroCitas) throws RemoteException {
+            HashMap<String, String> pacientesConServicio) throws RemoteException {
         
         this.ipServidorCitas = ipServidorCitas;
         this.puertoServidorCitas = puerto;
         this.nombre = nombre;
         this.pacientesConServicio = pacientesConServicio;
-        this.numeroCitas = numeroCitas;
+        
         this.citasPacientes = new HashMap<>();
         this.citas = new ArrayList<>();
-
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -65,16 +64,14 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         
     }
     
-    public void generarCitas(){
-        
-    }
-    
     public void crearGUI(){
         this.gui = new GUI_EPS();        
         this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
         this.gui.setVisible(true);
-        this.gui.addRowToJTablePacientes(this.pacientesConServicio);
-        this.gui.addRowToJTableCitas(this.citasPacientes);
+        this.gui.addRowToJTablePacientes(this.pacientesConServicio);        
+        //Cita cita = new Cita("Any", 34, 2, 6);        
+        //this.citas.add(cita);        
+        this.gui.addRowToJTableCitas(this.citas);
     }
     
     private void registrarServicioRegistro(){
@@ -91,7 +88,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
             }
             //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
             r.bind("ServicioEPS" + this.nombre, this);
-            System.out.println("Servidor de la EPS activo: ServicioEPS"+this.nombre);
+            System.out.println("Servidor de la EPS activo: ServicioEPS"+this.nombre+"\n");
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -127,11 +124,6 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     }
 
     @Override
-    public void avisar() throws RemoteException {
-        System.out.println("Avisado en EPS");
-    }
-
-    @Override
     public boolean pacienteTieneCobertura(String documentoPaciente) throws RemoteException {        
         if( this.pacientesConServicio.get(documentoPaciente) != null ){
             System.out.println("Paciente con documento "+documentoPaciente+" tiene cobertura");
@@ -141,23 +133,22 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
             return false;
         }        
     }
-
+    
     @Override
-    public Cita programarCita(Paciente paciente) throws RemoteException {
-        return null;
-    }
-    
     public List <Cita> entregarCalendario() throws RemoteException{
-            return this.citas;                
+        return this.citas;                
     }
     
+    @Override
      public void actualizarCalendaro(List <Cita> citas) throws RemoteException {
         this.citas = citas;
+        this.gui.addRowToJTableCitas(this.citas);
     }
      
+    @Override
      public boolean puedeConsumar(){
          
-         Random r = new Random();
+        Random r = new Random();
         double rand = r.nextInt(100) + r.nextDouble();
         if (rand < 0.1) {
             return false;

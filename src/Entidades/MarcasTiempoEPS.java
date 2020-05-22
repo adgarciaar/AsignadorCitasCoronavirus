@@ -16,10 +16,8 @@ public class MarcasTiempoEPS {
 
     public MarcasTiempoEPS() {
         this.marcaLectura = LocalDateTime.now();
-        this.marcaEscritura = LocalDateTime.now();
-        
-    }
-       
+        this.marcaEscritura = LocalDateTime.now();        
+    }       
 
     public LocalDateTime getMarcaLectura() {
         return marcaLectura;

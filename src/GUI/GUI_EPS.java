@@ -5,7 +5,9 @@
  */
 package GUI;
 
+import Entidades.Cita;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -93,7 +95,7 @@ public class GUI_EPS extends javax.swing.JFrame {
             jTableCitas.getColumnModel().getColumn(1).setResizable(false);
         }
 
-        jLabel3.setText("Citas disponibles");
+        jLabel3.setText("Citas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,18 +105,18 @@ public class GUI_EPS extends javax.swing.JFrame {
                 .addGap(68, 68, 68)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(159, 159, 159))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(34, 34, 34)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(69, Short.MAX_VALUE))))
+                        .addContainerGap(69, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(204, 204, 204))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,20 +187,24 @@ public class GUI_EPS extends javax.swing.JFrame {
                 
     }
     
-    public void addRowToJTableCitas(HashMap<String, String> citasPacientes){
+    public void addRowToJTableCitas(List<Cita> citasPacientes){
         
         DefaultTableModel model = (DefaultTableModel) jTableCitas.getModel();
         Object rowData[] = new Object[2];        
         for( int i = model.getRowCount() - 1; i >= 0; i-- ){
              model.removeRow(i);
         }
-        for (HashMap.Entry<String, String> entry : citasPacientes.entrySet()) {   
-            rowData[0] = entry.getKey();
+        //for (HashMap.Entry<String, String> entry : citasPacientes.entrySet()) {  
+        for (int j=0; j<citasPacientes.size(); j++) {
+            /*rowData[0] = entry.getKey();
             if( entry.getValue() == null ){
                 rowData[1] = " - ";
             }else{
                 rowData[1] = entry.getValue();
-            }            
+            }*/
+            Cita cita = citasPacientes.get(j);
+            rowData[0] = cita.getIdCita();            
+            rowData[1] = cita.getDocumentoPaciente();
             model.addRow(rowData); 
         }
                 

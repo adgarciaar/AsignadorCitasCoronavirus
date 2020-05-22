@@ -227,37 +227,37 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         boolean transaccionConsumada = false;
 
         while (!transaccionConsumada) {
-            
-                synchronized (this.transacciones) {
-                    //ver si esta transaccion es la siguiente en la lista
-                    if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
 
-                        String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
-                        boolean pacienteCuentaConEPS
-                                = this.verificarEPSPaciente(paciente.getDocumento(),
-                                        paciente.getEPS(), ipEPSPaciente);
+            synchronized (this.transacciones) {
+                //ver si esta transaccion es la siguiente en la lista
+                if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
 
-                        if (pacienteCuentaConEPS) {
-                            boolean consumada = this.consumarCita(this.transacciones.get(0));
-                            this.transacciones.remove(0);
-                            if (!consumada) {
-                                transacciones.add(new Transaccion(paciente));
-                            }
-                            transaccionConsumada = consumada;
-                            this.transacciones.notifyAll();
-                        } else { //Abortar la transacción
-                            System.out.println("Transacción abortada");
+                    String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
+                    boolean pacienteCuentaConEPS
+                            = this.verificarEPSPaciente(paciente.getDocumento(),
+                                    paciente.getEPS(), ipEPSPaciente);
+
+                    if (pacienteCuentaConEPS) {
+                        boolean consumada = this.consumarCita(this.transacciones.get(0));
+                        this.transacciones.remove(0);
+                        if (!consumada) {
+                            transacciones.add(new Transaccion(paciente));
                         }
-                    } else {
-                        try {
-                            this.transacciones.wait();
-                        } catch (InterruptedException e) {
-                            System.out.println("Error: " + e.toString());
-                        }
-
+                        transaccionConsumada = consumada;
+                        this.transacciones.notifyAll();
+                    } else { //Abortar la transacción
+                        System.out.println("Transacción abortada");
                     }
+                } else {
+                    try {
+                        this.transacciones.wait();
+                    } catch (InterruptedException e) {
+                        System.out.println("Error: " + e.toString());
+                    }
+
                 }
-            
+            }
+
         }
 
         return null;
@@ -322,7 +322,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
                 if (puedeConsumar(ipEPS, EPSPaciente)) {
 
-                    actualizarCalenarioEPS(Calendario, ipEPS, EPSPaciente);
+                    actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente);
 
                 } else {
                     try {
@@ -357,7 +357,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         return index;
     }
 
-    private void actualizarCalenarioEPS(List<Cita> Calendario, String ipEPS, String EPSPaciente) {
+    private void actualizarCalendarioEPS(List<Cita> Calendario, String ipEPS, String EPSPaciente) {
         try {
             String nombreServicio = "//" + ipEPS + ":" + this.puerto + "/ServicioEPS" + EPSPaciente;
             InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);

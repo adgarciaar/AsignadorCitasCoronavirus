@@ -26,11 +26,12 @@ public class InicioServidorCitas {
         try {
             Registry r = java.rmi.registry.LocateRegistry.createRegistry(puerto);       
             r.bind("ServAsignacionCitas", servicio);
-            System.out.println("Servidor de citas activo");
+            System.out.println("Servidor de citas activo\n");
             
             servicio.crearGUI();
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Error: "+e.toString());
+            System.exit(1);
         }        
         
     }
