@@ -5,6 +5,7 @@
  */
 package EPS;
 
+import GUI.GUI_EPS;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -29,6 +30,10 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     private HashMap<String, String> pacientesConServicio; 
     
     private int numeroCitas;
+    //duplas <Id cita, Documento paciente con cita>
+    private HashMap<String, String> citasPacientes;
+    
+    private GUI_EPS gui;
 
     public EPS(String ipServidorCitas, int puerto, String nombre, 
             HashMap<String, String> pacientesConServicio, int numeroCitas) throws RemoteException {
@@ -38,6 +43,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         this.nombre = nombre;
         this.pacientesConServicio = pacientesConServicio;
         this.numeroCitas = numeroCitas;
+        this.citasPacientes = new HashMap<>();
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -49,6 +55,20 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         }        
         this.ipEPS = inetAddress.getHostAddress();
         
+    }
+    
+    public void generarCitas(){
+        for (int i = 0; i < this.numeroCitas; i++) {
+            citasPacientes.put("Cita"+i, null);
+        }
+    }
+    
+    public void crearGUI(){
+        this.gui = new GUI_EPS();        
+        this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
+        this.gui.setVisible(true);
+        this.gui.addRowToJTablePacientes(this.pacientesConServicio);
+        this.gui.addRowToJTableCitas(this.citasPacientes);
     }
     
     private void registrarServicioRegistro(){
@@ -69,6 +89,9 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+        
+        this.generarCitas();
+        this.crearGUI();
     }
     
     public void registrarEPS() {

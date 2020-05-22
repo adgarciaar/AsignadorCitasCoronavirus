@@ -21,6 +21,6 @@ public interface InterfaceServidorCitas extends Remote{
             String ipGrupo, String idGrupo) throws RemoteException;
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException;
     
-    public void referenciarGUI(GUIServidorCitas gui) throws RemoteException;
+    public void crearGUI() throws RemoteException;
     
 }

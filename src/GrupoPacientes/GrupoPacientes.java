@@ -6,6 +6,7 @@
 package GrupoPacientes;
 
 import Entidades.Paciente;
+import GUI.GUIGrupoPacientes;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,7 +26,12 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     private String ipServidorCitas;
     private int puertoServidorCitas;
     private String idGrupo;
-    HashMap<String, Paciente> pacientes;
+    //duplas <idPaciente, Objeto Paciente>
+    private HashMap<String, Paciente> pacientes;
+    //duplas <idPaciente, string con situación>
+    private HashMap<String, String> situacionPacientes;   
+    
+    private GUIGrupoPacientes gui;
 
     public GrupoPacientes(String ipServidorCitas, int puerto, HashMap<String, Paciente> pacientes
         , String idGrupo) throws RemoteException {
@@ -34,6 +40,8 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         this.puertoServidorCitas = puerto;
         this.pacientes = pacientes;
         this.idGrupo = idGrupo;
+        
+        this.situacionPacientes = new HashMap<>();
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -63,6 +71,15 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+        
+        this.crearGUI();
+    }
+    
+    public void crearGUI(){
+        this.gui = new GUIGrupoPacientes();        
+        this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
+        this.gui.setVisible(true);
+        this.gui.addRowToJTablePacientes(this.pacientes, situacionPacientes);
     }
     
     public void registrarPacientes() {
@@ -115,6 +132,7 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
 
     @Override
     public void recibirMensaje(String mensaje) throws RemoteException {
+        this.gui.addRowToJTablePacientes(this.pacientes, situacionPacientes);
         System.out.println("Mensaje recibido desde servidor de citas:");
         System.out.println(mensaje);
     }

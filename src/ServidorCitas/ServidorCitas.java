@@ -187,8 +187,10 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     }
 
     @Override
-    public void referenciarGUI(GUIServidorCitas gui) throws RemoteException{
-       this.gui = gui;
+    public void crearGUI() throws RemoteException {
+        this.gui = new GUIServidorCitas(); 
+        this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
+        this.gui.setVisible(true);
     }
     
 }

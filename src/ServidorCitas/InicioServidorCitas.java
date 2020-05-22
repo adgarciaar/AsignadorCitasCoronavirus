@@ -29,11 +29,7 @@ public class InicioServidorCitas {
             r.bind("ServAsignacionCitas", servicio);
             System.out.println("Servidor de citas activo");
             
-            GUIServidorCitas gui = new GUIServidorCitas(servicio);            
-            servicio.referenciarGUI(gui);
-            gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
-            gui.setVisible(true);
-            
+            servicio.crearGUI();
         } catch (Exception e) {
             System.out.println(e);
         }        

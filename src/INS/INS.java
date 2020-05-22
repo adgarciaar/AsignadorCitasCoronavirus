@@ -27,6 +27,12 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         this.puerto = puerto;
         reportes = new HashMap<>();
     }
+    
+    public void crearGUI() throws RemoteException{
+        this.gui = new GUI_INS();
+        gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
+        gui.setVisible(true);
+    }
 
     @Override
     public int evaluarPaciente(Paciente paciente) throws RemoteException {
@@ -53,11 +59,6 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
                 + "obtuvo "+puntaje+" puntaje");
         
         return puntaje;
-    }
-
-    @Override
-    public void referenciarGUI(GUI_INS gui) throws RemoteException {
-        this.gui = gui;
     }
     
 }

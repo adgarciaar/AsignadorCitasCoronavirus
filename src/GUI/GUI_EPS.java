@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import ServidorCitas.InterfaceServidorCitas;
 import java.util.HashMap;
 import javax.swing.table.DefaultTableModel;
 
@@ -13,22 +12,13 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author adgar
  */
-public class GUIServidorCitas extends javax.swing.JFrame {
+public class GUI_EPS extends javax.swing.JFrame {
 
     /**
-     * Creates new form GUIServidorCitas
+     * Creates new form GUI_EPS
      */
-    public GUIServidorCitas() {        
+    public GUI_EPS() {
         initComponents();
-        DefaultTableModel model = (DefaultTableModel) jTablePacientes.getModel();
-        for( int i = model.getRowCount() - 1; i >= 0; i-- ){
-             model.removeRow(i);
-        }
-        
-        DefaultTableModel model2 = (DefaultTableModel) jTableEPS.getModel();
-        for( int i = model2.getRowCount() - 1; i >= 0; i-- ){
-             model2.removeRow(i);
-        }
     }
 
     /**
@@ -40,47 +30,17 @@ public class GUIServidorCitas extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTableEPS = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTablePacientes = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTablePacientes = new javax.swing.JTable();
+        jTableCitas = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTableEPS.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Nombre", "IP máquina"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTableEPS);
-
-        jLabel1.setText("Servidor de citas");
-
-        jLabel2.setText("EPS registradas");
+        jLabel1.setText("EPS");
 
         jTablePacientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -90,64 +50,86 @@ public class GUIServidorCitas extends javax.swing.JFrame {
                 {null, null}
             },
             new String [] {
-                "Documento", "IP máquina"
+                "Id", "Nombre"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTablePacientes);
+        jScrollPane1.setViewportView(jTablePacientes);
+        if (jTablePacientes.getColumnModel().getColumnCount() > 0) {
+            jTablePacientes.getColumnModel().getColumn(0).setResizable(false);
+        }
 
-        jLabel3.setText("Pacientes registrados");
+        jLabel2.setText("Pacientes");
+
+        jTableCitas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Cita", "Id Paciente"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jTableCitas);
+        if (jTableCitas.getColumnModel().getColumnCount() > 0) {
+            jTableCitas.getColumnModel().getColumn(0).setResizable(false);
+            jTableCitas.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        jLabel3.setText("Citas disponibles");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(180, 180, 180)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(179, 179, 179))
-            .addGroup(layout.createSequentialGroup()
+                .addGap(68, 68, 68)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(63, 63, 63)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(155, 155, 155)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(159, 159, 159))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(367, 367, 367)
-                        .addComponent(jLabel1)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(34, 34, 34)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(69, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(38, 38, 38)
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(55, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(59, 59, 59))
         );
 
         pack();
@@ -170,30 +152,22 @@ public class GUIServidorCitas extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUIServidorCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_EPS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUIServidorCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_EPS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUIServidorCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_EPS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUIServidorCitas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI_EPS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new GUIServidorCitas().setVisible(true);
+                //new GUI_EPS().setVisible(true);
             }
         });
-    }
-    
-    public void addRowToJTableEPS(String nombre, String ip){        
-        DefaultTableModel model = (DefaultTableModel) jTableEPS.getModel();
-        Object rowData[] = new Object[2];        
-        rowData[0] = nombre;
-        rowData[1] = ip;
-        model.addRow(rowData);                  
     }
     
     public void addRowToJTablePacientes(HashMap<String, String> listaPacientes){
@@ -210,6 +184,25 @@ public class GUIServidorCitas extends javax.swing.JFrame {
         }
                 
     }
+    
+    public void addRowToJTableCitas(HashMap<String, String> citasPacientes){
+        
+        DefaultTableModel model = (DefaultTableModel) jTableCitas.getModel();
+        Object rowData[] = new Object[2];        
+        for( int i = model.getRowCount() - 1; i >= 0; i-- ){
+             model.removeRow(i);
+        }
+        for (HashMap.Entry<String, String> entry : citasPacientes.entrySet()) {   
+            rowData[0] = entry.getKey();
+            if( entry.getValue() == null ){
+                rowData[1] = " - ";
+            }else{
+                rowData[1] = entry.getValue();
+            }            
+            model.addRow(rowData); 
+        }
+                
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -217,7 +210,7 @@ public class GUIServidorCitas extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTableEPS;
+    private javax.swing.JTable jTableCitas;
     private javax.swing.JTable jTablePacientes;
     // End of variables declaration//GEN-END:variables
 }
