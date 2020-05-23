@@ -123,7 +123,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
                 }
             }
         }
-        System.out.println("Síntomas leves: "+puntajeInicial);
+        //System.out.println("Síntomas leves: "+puntajeInicial);
         //Edad (máximo 20 puntos)
         if (edad <= 5) {
             puntajeInicial = puntajeInicial+20;
@@ -140,7 +140,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         if (edad >= 65) {
             puntajeInicial = puntajeInicial+20;
         }
-        System.out.println("Edad: "+puntajeInicial);
+        //System.out.println("Edad: "+puntajeInicial);
         
         //Patologías leves y moderadas (máximo 20 puntos)        
         String tipoPatologiaAntecedente;
@@ -162,7 +162,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         }
         puntajeInicial = puntajeInicial + puntajePatologiasLevesModeradas;   
         
-        System.out.println("Puntaje inicial es "+puntajeInicial);
+        //System.out.println("Puntaje inicial es "+puntajeInicial);
         
         puntaje = puntaje + puntajeInicial;
         
