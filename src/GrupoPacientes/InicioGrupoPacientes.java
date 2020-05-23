@@ -87,13 +87,13 @@ public class InicioGrupoPacientes {
         
         //System.out.println("\n"+pacientes+"\n");
         
+        GrupoPacientes grupoPacientes = null;
         try {
-            GrupoPacientes grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
-            grupoPacientes.solicitarCitas();
+            grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
         } catch (RemoteException e) {
             System.out.println("Error: "+e.toString());
         }
-        
+        grupoPacientes.solicitarCitas();
     }
     
 }

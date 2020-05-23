@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  *
  * @author adgar
  */
-public class Transaccion implements Serializable {
+public class Transaccion implements Serializable, Comparable<Transaccion> {
 
     private String id;
     private LocalDateTime timeStamp;
@@ -49,6 +49,11 @@ public class Transaccion implements Serializable {
 
     public void setObjeto(Object objeto) {
         this.objeto = objeto;
+    }
+
+    @Override
+    public int compareTo(Transaccion o) {
+        return this.timeStamp.compareTo(o.getTimeStamp());
     }
 
 }

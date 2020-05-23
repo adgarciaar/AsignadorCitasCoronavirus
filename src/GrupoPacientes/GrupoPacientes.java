@@ -8,6 +8,7 @@ package GrupoPacientes;
 import Entidades.Cita;
 import Entidades.Paciente;
 import GUI.GUIGrupoPacientes;
+import INS.InterfaceINS;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -56,6 +57,12 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         
         this.registrarServicioRegistro();
         this.crearGUI();
+        
+        //BORRAR        
+        /*for (HashMap.Entry<String, Paciente> entry : this.pacientes.entrySet()) { 
+            System.out.println("Paciente "+entry.getValue().getNombre());
+            this.probarPuntaje(entry.getValue());
+        }*/
     }
     
     private void registrarServicioRegistro(){
@@ -70,7 +77,7 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             }
             //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
             r.rebind("ServicioPacientes" + this.idGrupo, this);
-            System.out.println("Servidor del grupo de pacientes activo: ServicioPacientes"+this.idGrupo);
+            System.out.println("\nServidor del grupo de pacientes activo: ServicioPacientes"+this.idGrupo+"\n");
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -121,9 +128,9 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
                     +this.puertoServidorCitas+"/ServAsignacionCitas";
             
         try {
-            //InterfaceServidorCitas serverInterface =
-             //       (InterfaceServidorCitas) Naming.lookup(nombreServicio);
-            //Cita cita = serverInterface.obtenerCita(paciente);
+            InterfaceServidorCitas serverInterface =
+                    (InterfaceServidorCitas) Naming.lookup(nombreServicio);
+            Cita cita = serverInterface.obtenerCita(paciente);
             System.out.println("Solicitada cita para paciente "+paciente.getNombre());
         } catch (Exception e) {
             System.out.println("Error: "+e.toString());
@@ -143,4 +150,19 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         System.out.println(mensaje);
     }
     
+    //BORRAR
+    /*private void probarPuntaje(Paciente paciente){
+        try {
+            String nombreServicio = "//" + "192.168.0.9" + ":" + "7770" + "/ServicioINS";
+            InterfaceINS serverInterface = (InterfaceINS) Naming.lookup(nombreServicio);
+            int puntaje = serverInterface.evaluarPaciente(paciente);
+            //return serverInterface.evaluarPaciente(nombrePaciente);   
+            System.out.println("Puntaje paciente " + paciente.getNombre() + " es " + puntaje);
+            //return puntaje;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            //return -1;
+        }
+    }*/
 }
