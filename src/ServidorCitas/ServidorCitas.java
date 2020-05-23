@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -210,6 +211,53 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
         this.gui.setVisible(true);
     }
+    
+    /*
+    public void obtenerCitaSinMarcas(Paciente paciente){
+        Cita cita = null;
+
+        Transaccion transaccion = new Transaccion(paciente);
+
+        synchronized (this.transacciones) {
+            this.transacciones.add(transaccion);
+            this.transacciones.sort(null);
+        }
+
+        boolean transaccionConsumada = false;   
+        
+        
+        String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
+        synchronized (this) {
+            boolean pacienteCuentaConEPS
+                    = this.verificarEPSPaciente(paciente.getDocumento(),
+                            paciente.getEPS(), ipEPSPaciente);
+
+            if (pacienteCuentaConEPS) {
+
+                List<Cita> Calendario;
+                Calendario = traerCalendario(ipEPSPaciente, paciente.getEPS());
+                int prioridad = evaluarPaciente(paciente);
+                //int hora = Calendario.get(Calendario.size() - 1).getHora();
+                //int dia = Calendario.get(Calendario.size() - 1).getDia();
+                Random rand = new Random();
+                int hora = rand.nextInt(100); 
+                int dia = rand.nextInt(100); 
+                Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora)); 
+
+                if (prioridad >= 10 && prioridad < 90) {
+
+                    //Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
+                    actualizarCalendarioEPS(Calendario, ipEPSPaciente, paciente.getEPS());
+                }
+
+                //this.transacciones.notifyAll();
+            } else { //Abortar la transacción
+                System.out.println("Transacción abortada");
+                transaccionConsumada = true;
+            }
+        }
+    }
+    */
 
     @Override
     public Cita obtenerCita(Paciente paciente) {
@@ -223,8 +271,8 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             this.transacciones.sort(null);
         }
 
-        boolean transaccionConsumada = false;
-
+        boolean transaccionConsumada = false;  
+        
         while (!transaccionConsumada) {
 
             synchronized (this.transacciones) {
@@ -235,17 +283,22 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     boolean pacienteCuentaConEPS
                             = this.verificarEPSPaciente(paciente.getDocumento(),
                                     paciente.getEPS(), ipEPSPaciente);
+                    
+                    System.out.println("Paciente "+paciente.getNombre()+" eps: "+pacienteCuentaConEPS);
 
                     if (pacienteCuentaConEPS) {
-                        boolean consumada = this.consumarCita(this.transacciones.get(0));
+                        System.out.println("Se va a consumar para "+paciente.getNombre());
+                        //boolean consumada = this.consumarCita(this.transacciones.get(0));
+                        boolean consumada = this.consumarCita(transaccion);
                         this.transacciones.remove(0);
                         if (!consumada) {
                             transacciones.add(new Transaccion(paciente));
                         }
                         transaccionConsumada = consumada;
-                        this.transacciones.notifyAll();
+                        this.transacciones.notify();
                     } else { //Abortar la transacción
-                        System.out.println("Transacción abortada");
+                        System.out.println("Transacción abortada para paciente "+paciente.getNombre());
+                        transaccionConsumada = true;
                     }
                 } else {
                     try {
@@ -274,8 +327,9 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     }
 
     public boolean consumarCita(Transaccion transaccion) {
-        synchronized (this) {
+        synchronized (this) {            
             Paciente paciente = (Paciente) transaccion.getObjeto();
+            System.out.println("Consumando para paciente "+paciente.getNombre());
             String EPSPaciente = paciente.getEPS();
             String ipEPS = this.listaEPSs.get(EPSPaciente);
             List<Cita> Calendario;
@@ -300,8 +354,24 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     return false;
                 }
 
-                int hora = Calendario.get(Calendario.size() - 1).getHora();
-                int dia = Calendario.get(Calendario.size() - 1).getDia();
+                /*int hora = Calendario.get(Calendario.size() - 1).getHora();
+                int dia = Calendario.get(Calendario.size() - 1).getDia();*/
+                
+                /*Random rand = new Random();
+                int hora = rand.nextInt(200); 
+                int dia = rand.nextInt(200); */
+                
+                int hora = 0;
+                int dia = 0;
+                if (!Calendario.isEmpty()) {
+                    hora = Calendario.get(Calendario.size() - 1).getHora();
+                    dia = Calendario.get(Calendario.size() - 1).getDia();
+                }
+                
+                if (hora == 8) {
+                    dia++;
+                }else
+                    hora++;
 
                 if (prioridad >= 70 && prioridad < 90) {
 
@@ -318,8 +388,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 }
 
                 Collections.sort(Calendario);
-
-                if (puedeConsumar(ipEPS, EPSPaciente)) {
+                
+                
+                actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente); //borrar esta
+                
+                /*if (puedeConsumar(ipEPS, EPSPaciente)) {
 
                     actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente);
 
@@ -329,9 +402,9 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     } catch (Exception e) {
                         System.out.println("Thread interrupted.");
                     }
-                }
+                }*/
 
-                //notificat cita consumada
+                //notificar cita consumada
             } else {
                 System.out.println("Inconsistencia de concurrencia escritura del paciente:" + paciente.getDocumento());
                 return false;
@@ -365,7 +438,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             System.out.println(e.toString());
         }
     }
-
+    
     private boolean puedeConsumar(String ipEPS, String EPSPaciente) {
         try {
             String nombreServicio = "//" + ipEPS + ":" + this.puerto + "/ServicioEPS" + EPSPaciente;
@@ -376,5 +449,5 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             return false;
         }
     }
-
+    
 }

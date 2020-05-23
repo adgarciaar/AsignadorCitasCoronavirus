@@ -8,7 +8,6 @@ package GrupoPacientes;
 import Entidades.Cita;
 import Entidades.Paciente;
 import GUI.GUIGrupoPacientes;
-import INS.InterfaceINS;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
