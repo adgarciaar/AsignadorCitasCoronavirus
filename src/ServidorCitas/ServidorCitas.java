@@ -381,10 +381,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
                 if (prioridad >= 90) {
 
-                    int index = buscarMenorPrioridad(Calendario);
                     Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
-                    Collections.swap(Calendario, index, Calendario.size() - 1);
-
+                    if (!Calendario.isEmpty()) {
+                        int index = buscarMenorPrioridad(Calendario);
+                        Collections.swap(Calendario, index, Calendario.size() - 1);
+                    }
                 }
 
                 Collections.sort(Calendario);
