@@ -32,6 +32,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         this.reportes = new HashMap<>();
         this.gravedadSintomas = new HashMap<>();
         this.gravedadPatologiasAntecedentes = new HashMap<>();
+        this.establecerGravedadSintomasPatologiasAntecedentes();
     }
     
     private void establecerGravedadSintomasPatologiasAntecedentes(){
@@ -107,54 +108,63 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         
         //60 puntos-------------
         
+        int puntajeInicial = 0;
+        
         //Síntomas leves (máximo 20 puntos)
         String tipoSintoma;
         for(int i=0; i<sintomas.size(); i++){
             sintoma = sintomas.get(i);
-            tipoSintoma = this.gravedadSintomas.get(sintoma);            
+            //System.out.println(sintoma);
+            tipoSintoma = this.gravedadSintomas.get(sintoma);  
+            //System.out.println("retorno es "+tipoSintoma);
             if( tipoSintoma != null ){
-                if(tipoSintoma.equals("Leve")){
-                    puntaje += 5;
+                if(tipoSintoma.equals("Leve")){                    
+                    puntajeInicial = puntajeInicial+5;
                 }
             }
         }
-        
+        System.out.println("Síntomas leves: "+puntajeInicial);
         //Edad (máximo 20 puntos)
         if (edad <= 5) {
-            puntaje += 20;
+            puntajeInicial = puntajeInicial+20;
         }
         if (edad > 5 && edad < 20) {
-            puntaje += 5;
+            puntajeInicial = puntajeInicial+5;
         }
-        if (edad > 20 && edad < 40) {
-            puntaje += 8;
+        if (edad >= 20 && edad < 40) {
+            puntajeInicial = puntajeInicial+8;
         }
-        if (edad > 40 && edad < 65) {
-            puntaje += 14;
+        if (edad >= 40 && edad < 65) {
+            puntajeInicial = puntajeInicial+14;
         }
         if (edad >= 65) {
-            puntaje += 20;
+            puntajeInicial = puntajeInicial+20;
         }
+        System.out.println("Edad: "+puntajeInicial);
         
         //Patologías leves y moderadas (máximo 20 puntos)        
         String tipoPatologiaAntecedente;
         int puntajePatologiasLevesModeradas = 0;
-        for(int i=0; i<sintomas.size(); i++){
+        for(int i=0; i<patologias_antecedentes.size(); i++){
             patologia_antecedente = patologias_antecedentes.get(i);
             tipoPatologiaAntecedente = this.gravedadPatologiasAntecedentes.get(patologia_antecedente);
             if( tipoPatologiaAntecedente != null ){
                 if(tipoPatologiaAntecedente.equals("Leve")){
-                    puntajePatologiasLevesModeradas += 5;
+                    puntajePatologiasLevesModeradas = puntajePatologiasLevesModeradas + 5;
                 }
                 if(tipoPatologiaAntecedente.equals("Moderado")){
-                    puntajePatologiasLevesModeradas += 10;
+                    puntajePatologiasLevesModeradas = puntajePatologiasLevesModeradas + 10;
                 }
             }
         }   
         if(puntajePatologiasLevesModeradas > 20){
             puntajePatologiasLevesModeradas = 20;
         }
-        puntaje += puntajePatologiasLevesModeradas;   
+        puntajeInicial = puntajeInicial + puntajePatologiasLevesModeradas;   
+        
+        System.out.println("Puntaje inicial es "+puntajeInicial);
+        
+        puntaje = puntaje + puntajeInicial;
         
         
         //40 puntos-------------
@@ -164,13 +174,13 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         //Edad
         if (edad >= 65) {
             if (edad >= 65 && edad < 75) {
-                puntajeAdicional += 8;
+                puntajeAdicional = puntajeAdicional + 8;
             }
             if (edad >= 75 && edad < 85) {
-                puntajeAdicional += 12;
+                puntajeAdicional = puntajeAdicional + 12;
             }
             if (edad >= 85) {
-                puntajeAdicional += 16;
+                puntajeAdicional = puntajeAdicional + 16;
             }
         }
         
@@ -180,18 +190,18 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
             tipoSintoma = this.gravedadSintomas.get(sintoma);            
             if( tipoSintoma != null ){
                 if(tipoSintoma.equals("Grave")){
-                    puntajeAdicional += 12;
+                    puntajeAdicional = puntajeAdicional + 12;
                 }
             }
         }
         
         //Patologías/antecedentes graves
-        for(int i=0; i<sintomas.size(); i++){
+        for(int i=0; i<patologias_antecedentes.size(); i++){
             patologia_antecedente = patologias_antecedentes.get(i);
             tipoPatologiaAntecedente = this.gravedadPatologiasAntecedentes.get(patologia_antecedente);
             if( tipoPatologiaAntecedente != null ){
                 if(tipoPatologiaAntecedente.equals("Grave")){
-                    puntajeAdicional += 12;
+                    puntajeAdicional = puntajeAdicional + 12;
                 }                
             }
         }
@@ -199,7 +209,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         if(puntajeAdicional > 40){
             puntajeAdicional = 40;
         }
-        puntaje += puntajeAdicional;   
+        puntaje = puntaje + puntajeAdicional;   
         
         
         this.gui.addRowToJTablePacientes(paciente.getDocumento(), paciente.getNombre(), puntaje);

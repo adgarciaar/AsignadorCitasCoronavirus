@@ -146,7 +146,6 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         } catch (Exception e) {
             System.out.println(e);
             return -1;
-
         }
     }
 
