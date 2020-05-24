@@ -65,6 +65,7 @@ public class GUIGrupoPacientes extends javax.swing.JFrame {
             jTablePacientes.getColumnModel().getColumn(1).setResizable(false);
             jTablePacientes.getColumnModel().getColumn(2).setResizable(false);
             jTablePacientes.getColumnModel().getColumn(3).setResizable(false);
+            jTablePacientes.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jLabel3.setText("Datos ingresados y situación");
@@ -77,10 +78,9 @@ public class GUIGrupoPacientes extends javax.swing.JFrame {
                 .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(60, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 786, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(471, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(321, 321, 321))
         );
