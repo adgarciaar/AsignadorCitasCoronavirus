@@ -5,8 +5,7 @@
  */
 package GUI;
 
-import ServidorCitas.InterfaceServidorCitas;
-import java.util.HashMap;
+import Entidades.Paciente;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -196,18 +195,21 @@ public class GUIServidorCitas extends javax.swing.JFrame {
         model.addRow(rowData);                  
     }
     
-    public void addRowToJTablePacientes(HashMap<String, String> listaPacientes){
+    public void addRowToJTablePacientes(Paciente paciente){
         
         DefaultTableModel model = (DefaultTableModel) jTablePacientes.getModel();
-        Object rowData[] = new Object[2];        
-        for( int i = model.getRowCount() - 1; i >= 0; i-- ){
+        Object rowData[] = new Object[2];    
+        rowData[0] = paciente.getDocumento();
+        rowData[1] = paciente.getIpGrupo();
+        model.addRow(rowData);
+        /*for( int i = model.getRowCount() - 1; i >= 0; i-- ){
              model.removeRow(i);
-        }
-        for (HashMap.Entry<String, String> entry : listaPacientes.entrySet()) {   
+        }*/
+        /*for (HashMap.Entry<String, String> entry : listaPacientes.entrySet()) {   
             rowData[0] = entry.getKey();
             rowData[1] = entry.getValue();
             model.addRow(rowData); 
-        }
+        }*/
                 
     }
 

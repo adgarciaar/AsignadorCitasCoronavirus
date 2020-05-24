@@ -1,14 +1,17 @@
 Grupo1
-4
-ID1	Adrian	22	MiEPS
-2	Fiebre	Tos
-0
-ID2	Juan	22	MiEPS
+5
+ID1	Mateo	66	MiEPS
+7	Fiebre	Tos	Cansancio	Insuficiencia pulmonar	Shock séptico	Falta de aire y dificultad para respirar	Falla multiorgánica
+1	Cáncer
+ID2	Daniela	22	MiEPS
 2	Cansancio	Dolor
 0
-ID3	Christian	21	MiEPS
-1	Cansancio
+ID3	Nicolas	56	MiEPS
+3	Fiebre	Tos	Cansancio
 1	Diabetes
 ID4	Andrea	20	MiEPS
-1	Insuficiencia pulmonar
+5	Fiebre	Tos	Cansancio	Dolor	Insuficiencia pulmonar
 2	Asma	Cirugía del corazón
+ID5	Leonardo	45	MiEPS
+5	Fiebre	Tos	Cansancio	Dolor	Shock séptico	Insuficiencia pulmonar
+1	EPOC

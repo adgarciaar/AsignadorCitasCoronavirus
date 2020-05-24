@@ -82,6 +82,8 @@ public class InicioGrupoPacientes {
                 System.out.println("Patología/Antecedente: "+patologiasAntecedentesPaciente[j]);
             }
             
+            paciente.setIdGrupo(idGrupo);
+            
             pacientes.put(paciente.getDocumento(), paciente);            
         }
         

@@ -174,13 +174,13 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
         //Edad
         if (edad >= 65) {
             if (edad >= 65 && edad < 75) {
-                puntajeAdicional = puntajeAdicional + 8;
+                puntajeAdicional = puntajeAdicional + 20;
             }
             if (edad >= 75 && edad < 85) {
-                puntajeAdicional = puntajeAdicional + 12;
+                puntajeAdicional = puntajeAdicional + 25;
             }
             if (edad >= 85) {
-                puntajeAdicional = puntajeAdicional + 16;
+                puntajeAdicional = puntajeAdicional + 30;
             }
         }
         
@@ -190,7 +190,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
             tipoSintoma = this.gravedadSintomas.get(sintoma);            
             if( tipoSintoma != null ){
                 if(tipoSintoma.equals("Grave")){
-                    puntajeAdicional = puntajeAdicional + 12;
+                    puntajeAdicional = puntajeAdicional + 20;
                 }
             }
         }
@@ -201,7 +201,7 @@ public class INS extends UnicastRemoteObject implements InterfaceINS {
             tipoPatologiaAntecedente = this.gravedadPatologiasAntecedentes.get(patologia_antecedente);
             if( tipoPatologiaAntecedente != null ){
                 if(tipoPatologiaAntecedente.equals("Grave")){
-                    puntajeAdicional = puntajeAdicional + 12;
+                    puntajeAdicional = puntajeAdicional + 20;
                 }                
             }
         }

@@ -29,8 +29,8 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     private String idGrupo;
     //duplas <idPaciente, Objeto Paciente>
     private HashMap<String, Paciente> pacientes;
-    //duplas <idPaciente, string con situación>
-    private HashMap<String, String> situacionPacientes;   
+    //duplas <idPaciente, Id cita>
+    private HashMap<String, String> citasPacientes;   
     
     private GUIGrupoPacientes gui;
 
@@ -42,7 +42,7 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         this.pacientes = pacientes;
         this.idGrupo = idGrupo;
         
-        this.situacionPacientes = new HashMap<>();
+        this.citasPacientes = new HashMap<>();
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -53,6 +53,13 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             System.exit(1);
         }        
         this.ipGrupoPacientes = inetAddress.getHostAddress();
+        
+        Paciente pacienteTemp;
+        for (HashMap.Entry<String, Paciente> entry : this.pacientes.entrySet()) { 
+            pacienteTemp = entry.getValue();
+            pacienteTemp.setIpGrupo(this.ipGrupoPacientes);
+            entry.setValue(pacienteTemp);
+        }
         
         this.registrarServicioRegistro();
         this.crearGUI();
@@ -87,7 +94,7 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         this.gui = new GUIGrupoPacientes();        
         this.gui.setLocationRelativeTo(null); //ubicarla en centro de pantalla
         this.gui.setVisible(true);
-        this.gui.addRowToJTablePacientes(this.pacientes, situacionPacientes);
+        this.gui.addRowToJTablePacientes(this.pacientes, citasPacientes);
     }
     
     public void solicitarCitas() {
@@ -129,7 +136,7 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         try {
             InterfaceServidorCitas serverInterface =
                     (InterfaceServidorCitas) Naming.lookup(nombreServicio);
-            Cita cita = serverInterface.obtenerCita(paciente);
+            Cita cita = serverInterface.obtenerCita(paciente, this.ipGrupoPacientes, this.idGrupo);
             System.out.println("Solicitada cita para paciente "+paciente.getNombre());
         } catch (Exception e) {
             System.out.println("Error: "+e.toString());
@@ -138,15 +145,10 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     }
 
     @Override
-    public void informarAsignacionCita() throws RemoteException {
-        System.out.println("Cita asignada");
-    }
-
-    @Override
-    public void recibirMensaje(String mensaje) throws RemoteException {
-        this.gui.addRowToJTablePacientes(this.pacientes, situacionPacientes);
-        System.out.println("Mensaje recibido desde servidor de citas:");
-        System.out.println(mensaje);
+    public void informarAsignacionCita(Cita cita) throws RemoteException {
+        this.citasPacientes.put(cita.getDocumentoPaciente(), cita.getIdCita());
+        this.gui.addRowToJTablePacientes(this.pacientes, this.citasPacientes);
+        System.out.println("Asignación de cita recibida desde servidor de citas:");        
     }
     
     //BORRAR
