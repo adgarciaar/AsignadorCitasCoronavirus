@@ -252,10 +252,10 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         }
     }
 
-    public boolean consumarCita(Transaccion transaccion) {
+     public boolean consumarCita(Transaccion transaccion) {
         synchronized (this) {            
             Paciente paciente = (Paciente) transaccion.getObjeto();
-            //System.out.println("Consumando para paciente "+paciente.getNombre());
+            System.out.println("Consumando para paciente "+paciente.getNombre());
             String EPSPaciente = paciente.getEPS();
             String ipEPS = this.listaEPSs.get(EPSPaciente);
             List<Cita> Calendario;
@@ -266,7 +266,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
                 marcasEPS.setMarcaLectura(transaccion.getTimeStamp());
             } else {
-                System.out.println("Inconsistencia de concurrencia lectura del paciente:" + paciente.getDocumento());
+                System.out.println("Inconsistencia de concurrencia lectura del paciente:" + paciente.getNombre());
                 return false;
             }
 
@@ -298,32 +298,33 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     dia++;
                 }else
                     hora++;
-                
-                /*if(prioridad < 70){
-                    System.out.println("Menor para el paciente "+paciente.getNombre());
-                } */               
 
-                if (prioridad >= 70 && prioridad < 90) {
-                    Cita nuevaCita = new Cita(paciente.getDocumento(), prioridad, dia, hora);
-                    Calendario.add(nuevaCita);
-                    String ipGrupo = paciente.getIpGrupo();
-                    String idGrupo = paciente.getIdGrupo();
-                    //System.out.println("Enviando a ip "+ipGrupo+" con id "+idGrupo);
-                    this.enviarCitaGrupoPacientes(nuevaCita, ipGrupo, idGrupo);
-                }
-
-                
-                if (prioridad >= 90) {
+                if (prioridad >= 40 && prioridad < 70) {
 
                     Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
+
+                }
+
+                if (prioridad >= 70) {
+
+                    
                     if (!Calendario.isEmpty()) {
+                        int horaAux,diaAux;
+                        Cita citaAux;
                         int index = buscarMenorPrioridad(Calendario);
-                        Collections.swap(Calendario, index, Calendario.size() - 1);
-                    }
+                        citaAux = Calendario.get(index);
+                        horaAux = citaAux.getHora();
+                        diaAux = citaAux.getDia();
+                        
+                        Calendario.add(new Cita(paciente.getDocumento(), prioridad, diaAux, horaAux));
+                        citaAux.setDia(dia);
+                        citaAux.setHora(hora);
+                    }else
+                    Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
                 }
 
                 Collections.sort(Calendario);
-                
+
                 
                 actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente); //borrar esta
                 
@@ -338,6 +339,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                         System.out.println("Thread interrupted.");
                     }
                 }*/
+                marcasEPS.setMarcaEscritura(transaccion.getTimeStamp());
 
                 //notificar cita consumada
             } else {
