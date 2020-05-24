@@ -100,27 +100,12 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     public void solicitarCitas() {
         
         try {
-            
-            /*
-            this.registrarServicioRegistro();
-            
-            String nombreServicio = "//"+this.ipServidorCitas+":"
-                    +this.puertoServidorCitas+"/ServAsignacionCitas";
-            
-            InterfaceServidorCitas serverInterface = (
-                    InterfaceServidorCitas) Naming.lookup(nombreServicio);
-            
-            serverInterface.registrarPacientes(this.pacientes, 
-                    this.ipGrupoPacientes, this.idGrupo);
-            */
-            
             for (HashMap.Entry<String, Paciente> entry : this.pacientes.entrySet()) { 
                 //iniciar un hilo para solicitar la cita, por cada paciente
                 Runnable tarea = () -> { this.solicitarCitaPaciente(entry.getValue()) ;};      
                 Thread hilo = new Thread(tarea);
                 hilo.start();
-            }
-            
+            }            
         } catch (Exception e) {
             System.out.println(this.pacientes.size());
             System.out.println("Error: "+e.toString());
@@ -166,4 +151,11 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             //return -1;
         }
     }*/
+
+    @Override
+    public void informarProblemaCita(String documentoPaciente, String mensaje) throws RemoteException {
+        this.citasPacientes.put(documentoPaciente, mensaje);
+        this.gui.addRowToJTablePacientes(this.pacientes, this.citasPacientes);
+        System.out.println("Mensaje recibido desde servidor de citas:");   
+    }
 }
