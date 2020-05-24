@@ -147,6 +147,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             this.transacciones.sort(null);  
             this.gui.addRowToJTablePacientes(paciente);
         }
+        
+        /*synchronized(this.listaPacientes){
+            this.listaPacientes.put(paciente.getDocumento(), paciente);
+            this.gui.addRowToJTablePacientes(this.listaPacientes);
+        }*/
 
         boolean transaccionConsumada = false;  
         
@@ -167,26 +172,32 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                         //System.out.println("Se va a consumar para "+paciente.getNombre());
                         //boolean consumada = this.consumarCita(this.transacciones.get(0));
                         boolean consumada = this.consumarCita(transaccion);
-                        this.transacciones.remove(0);
+                        this.transacciones.clear();
                         if (!consumada) {
-                            transacciones.add(new Transaccion(paciente));
+                            transaccion = new Transaccion(paciente); 
+                            this.transacciones.add(transaccion);
+                            /*for(int i = 0; i < this.transacciones.size();i++ ){
+                                Paciente paciente1 = (Paciente) this.transacciones.get(i).getObjeto();
+                                System.out.println( paciente1.getNombre() +"  "+ this.transacciones.get(i).getTimeStamp() );
+                            }*/
+                            continue;
                         }
                         transaccionConsumada = consumada;
-                        this.transacciones.notify();
+                      //  this.transacciones.notify();
+                      System.out.println("Transacción consumada para paciente "+paciente.getNombre());
                     } else { //Abortar la transacción
-                        System.out.println("Transacción abortada para paciente "+paciente.getNombre());
-                        
-                        this.enviarMensajeGrupoPacientes(paciente.getDocumento(),
-                                "No registrado en EPS", ipGrupo, idGrupo);
-                    
+                        System.out.println("---Transacción abortada para paciente "+paciente.getNombre());
                         transaccionConsumada = true;
                     }
                 } else {
-                    try {
-                        this.transacciones.wait();
-                    } catch (InterruptedException e) {
-                        System.out.println("Error: " + e.toString());
+                    System.out.println("--Transacción abortada para paciente "+paciente.getNombre());
+                    if (!this.transacciones.isEmpty()){                        
+                        this.transacciones.clear();                       
                     }
+                    transaccion = new Transaccion(paciente); 
+                    this.transacciones.add(transaccion);
+                    
+                    transaccionConsumada = false;
 
                 }
             }
@@ -239,7 +250,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 int dia = Calendario.get(Calendario.size() - 1).getDia();*/
                 
                 int hora = 0;
-                int dia = 0;
+                int dia = 1;
                 if (!Calendario.isEmpty()) {
                     hora = Calendario.get(Calendario.size() - 1).getHora();
                     dia = Calendario.get(Calendario.size() - 1).getDia();

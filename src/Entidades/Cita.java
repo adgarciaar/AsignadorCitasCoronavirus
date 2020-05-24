@@ -6,6 +6,9 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.HashMap;
+
+
 
 /**
  *
@@ -30,10 +33,25 @@ public class Cita implements Serializable , Comparable<Cita>{
         this.prioridad = prioridad;
         this.dia = dia;
         this.hora = hora;
-        this.idCita = "Cita_d"+this.dia+"_h"+this.hora;
+        this.idCita = "Cita día: "+this.dia+" hora: "+ ajustarHoraCita(this.hora);
+       
     }
     
-    
+    public String ajustarHoraCita(int hora){
+        
+        HashMap<Integer, String> horarios = new HashMap<Integer, String>();
+        horarios.put(1,"06:00");
+        horarios.put(2,"07:00");
+        horarios.put(3,"08:00");
+        horarios.put(4,"09:00");
+        horarios.put(5,"10:00");
+        horarios.put(6,"11:00");
+        horarios.put(7,"12:00");
+        horarios.put(8,"13:00");
+        
+        return horarios.get(hora);
+
+    }
 
     public String getIdCita() {
         return idCita;
@@ -67,6 +85,7 @@ public class Cita implements Serializable , Comparable<Cita>{
 
     public void setDia(int dia) {
         this.dia = dia;
+        this.idCita = "Cita día: "+this.dia+" hora: "+ ajustarHoraCita(this.hora);
     }
 
     public int getHora() {
@@ -75,6 +94,7 @@ public class Cita implements Serializable , Comparable<Cita>{
 
     public void setHora(int hora) {
         this.hora = hora;
+        this.idCita = "Cita día: "+this.dia+" hora: "+ ajustarHoraCita(this.hora);
     }
 
     @Override
