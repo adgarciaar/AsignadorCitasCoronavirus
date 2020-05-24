@@ -153,7 +153,7 @@ public class GUIGrupoPacientes extends javax.swing.JFrame {
             rowData[2] = paciente.getEdad();
             rowData[3] = paciente.getEPS();
             
-            situacionPaciente = situacionPacientes.get(entry.getValue());
+            situacionPaciente = situacionPacientes.get(paciente.getDocumento());
             if(situacionPaciente == null){
                 rowData[4] = " - ";
             }else{

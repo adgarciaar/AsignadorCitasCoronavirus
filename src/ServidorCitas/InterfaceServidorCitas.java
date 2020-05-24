@@ -7,10 +7,8 @@ package ServidorCitas;
 
 import Entidades.Cita;
 import Entidades.Paciente;
-import GUI.GUIServidorCitas;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 
 /**
  *
@@ -18,12 +16,8 @@ import java.util.HashMap;
  */
 public interface InterfaceServidorCitas extends Remote{
     
-    public Cita obtenerCita(Paciente paciente) throws RemoteException;
-    
-    public void registrarPacientes(HashMap<String, Paciente> pacientes, 
-            String ipGrupo, String idGrupo) throws RemoteException;
+    public Cita obtenerCita(Paciente paciente, String ipGrupo, String idGrupo) throws RemoteException; 
     public boolean registrarEPS(String nombreEPS, String ipEPS) throws RemoteException;
-    
     public void crearGUI() throws RemoteException;
     
 }

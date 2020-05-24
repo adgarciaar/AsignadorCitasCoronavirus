@@ -6,7 +6,6 @@
 package EPS;
 
 import Entidades.Cita;
-import Entidades.Paciente;
 import GUI.GUI_EPS;
 import ServidorCitas.InterfaceServidorCitas;
 import java.net.InetAddress;

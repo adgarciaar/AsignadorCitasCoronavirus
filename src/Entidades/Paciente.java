@@ -22,6 +22,8 @@ public class Paciente implements Serializable{
     private String EPS;
     private List<String> sintomas;
     private List<String> patologias_antecedentes;
+    private String idGrupo;
+    private String ipGrupo;
 
     public Paciente() {
         this.sintomas = new ArrayList<>();
@@ -86,6 +88,22 @@ public class Paciente implements Serializable{
 
     public ChronoLocalDateTime<?> getTimeStampEscritura() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getIdGrupo() {
+        return idGrupo;
+    }
+
+    public void setIdGrupo(String idGrupo) {
+        this.idGrupo = idGrupo;
+    }
+
+    public String getIpGrupo() {
+        return ipGrupo;
+    }
+
+    public void setIpGrupo(String ipGrupo) {
+        this.ipGrupo = ipGrupo;
     }
     
 }

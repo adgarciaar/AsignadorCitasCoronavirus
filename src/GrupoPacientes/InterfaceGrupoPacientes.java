@@ -5,7 +5,7 @@
  */
 package GrupoPacientes;
 
-import GUI.GUIGrupoPacientes;
+import Entidades.Cita;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -15,7 +15,6 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceGrupoPacientes extends Remote {
     
-    public void recibirMensaje(String mensaje) throws RemoteException;
-    public void informarAsignacionCita() throws RemoteException;    
+    public void informarAsignacionCita(Cita cita) throws RemoteException;       
     
 }

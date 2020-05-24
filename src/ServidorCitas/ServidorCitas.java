@@ -34,11 +34,11 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     //maoa con duplas <EPS, MarcaTiempoEPS>
     private HashMap<String, MarcasTiempoEPS> marcasTiempoEPSs;
     //mapa con duplas <Documento paciente, IP de la máquina de su grupo>
-    private HashMap<String, String> listaIPsPacientes;
+    //private HashMap<String, String> listaIPsPacientes;
     //mapa con duplas <Documento paciente, Paciente>
     private HashMap<String, Paciente> listaPacientes;
     //mapa con duplas <Documento paciente, Id de su grupo>
-    private HashMap<String, String> listaPacientesGrupos;
+    //private HashMap<String, String> listaPacientesGrupos;
 
     private String ipServidorINS;
     private int puertoINS;
@@ -56,9 +56,9 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
         this.listaEPSs = new HashMap<>();
         this.marcasTiempoEPSs = new HashMap<>();
-        this.listaIPsPacientes = new HashMap<>();
+        //this.listaIPsPacientes = new HashMap<>();
         this.listaPacientes = new HashMap<>();
-        this.listaPacientesGrupos = new HashMap<>();
+        //this.listaPacientesGrupos = new HashMap<>();
 
         this.transacciones = new ArrayList<>();
 
@@ -82,58 +82,6 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         }
     }
 
-    @Override
-    public void registrarPacientes(HashMap<String, Paciente> pacientes,
-            String ipGrupo, String idGrupo) throws RemoteException {
-
-        /*
-        boolean registroCorrecto = true;
-        
-        synchronized(this) {
-            
-            String documentoPaciente;
-            
-            for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) { 
-                
-                documentoPaciente = entry.getKey();
-                Paciente paciente = entry.getValue();
-                
-                if( this.listaIPsPacientes.get( documentoPaciente ) == null ){
-                    //el paciente no se ha registrado previamente
-                    this.listaIPsPacientes.put(documentoPaciente, ipGrupo);
-                    this.listaPacientes.put(documentoPaciente, paciente);
-                    this.listaPacientesGrupos.put(documentoPaciente, idGrupo);
-                }else{
-                    //retorno = false;
-                    break;
-                }             
-            }
-            
-            if(registroCorrecto){
-                
-                System.out.println("Se agregaron los pacientes: "+pacientes);
-                this.gui.addRowToJTablePacientes(this.listaIPsPacientes);
-                
-                this.verificarEPSPacientes(pacientes);
-                //return registroCorrecto;
-                
-            }else{
-                //hacer rollback (remover los que se alcanzaron a agregar)
-                for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) { 
-                    documentoPaciente = entry.getKey();
-                    if( this.listaIPsPacientes.get( documentoPaciente ) != null ){
-                        this.listaIPsPacientes.remove(documentoPaciente);
-                        this.listaPacientes.remove(documentoPaciente);
-                    }
-                }
-                System.out.println("Error: pacientes ya registrados. Aplicado rollback");
-                //return false;
-            }
-            //this.listaPacientes.addAll(pacientes);
-        }   
-         */
-    }
-
     public int evaluarPaciente(Paciente paciente) {
 
         try {
@@ -150,31 +98,6 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         }
     }
 
-    public void verificarEPSPacientes(HashMap<String, Paciente> pacientes) {
-
-        /*
-        synchronized(this) {
-            for (HashMap.Entry<String, Paciente> entry : pacientes.entrySet()) {                
-                String documentoPaciente = entry.getKey();
-                Paciente paciente = entry.getValue();
-                String EPSPaciente = paciente.getEPS();
-                String ipEPS = this.listaEPSs.get(EPSPaciente);    
-                if(this.verificarEPSPaciente(documentoPaciente, EPSPaciente, ipEPS)){
-                    System.out.println("Paciente con documento "+documentoPaciente+" tiene EPS válida");
-                    this.evaluarPaciente(paciente);
-                }else{
-                    String mensaje = "Paciente con documento "+documentoPaciente+" no tiene EPS válida";
-                    System.out.println(mensaje);
-                    String ipGrupo = this.listaIPsPacientes.get(documentoPaciente);
-                    String idGrupo = this.listaPacientesGrupos.get(documentoPaciente);
-                    this.enviarMensajeGrupoPacientes(mensaje, ipGrupo, idGrupo);
-                }                
-            }
-            this.asignarCitas();
-        }
-         */
-    }
-
     public boolean verificarEPSPaciente(String documentoPaciente, String nombreEPS, String ipEPS) {
 
         try {
@@ -187,24 +110,21 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         }
 
     }
-
-    /*
-    public void enviarMensajeGrupoPacientes(String mensaje, String ipGrupo, String idGrupo){
+   
+    public void enviarCitaGrupoPacientes(Cita cita, String ipGrupo, String idGrupo){
         
         try {
             String nombreServicio = "//"+ipGrupo+":"+this.puerto+"/ServicioPacientes"+idGrupo;            
             InterfaceGrupoPacientes serverInterface = 
                     (InterfaceGrupoPacientes) Naming.lookup(nombreServicio);
             
-            serverInterface.recibirMensaje(mensaje);
+            serverInterface.informarAsignacionCita(cita);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.out.println("Error al informar grupo de paciente: "+e.toString());
         }
         
-    }*/
- /*public void asignarCitas(){
-        System.out.println("Asignando citas");
-    }*/
+    }
+ 
     @Override
     public void crearGUI() throws RemoteException {
         this.gui = new GUIServidorCitas();
@@ -260,7 +180,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     */
 
     @Override
-    public Cita obtenerCita(Paciente paciente) {
+    public Cita obtenerCita(Paciente paciente, String ipGrupo, String idGrupo) {
 
         Cita cita = null;
 
@@ -268,8 +188,14 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
         synchronized (this.transacciones) {
             this.transacciones.add(transaccion);
-            this.transacciones.sort(null);
+            this.transacciones.sort(null);  
+            this.gui.addRowToJTablePacientes(paciente);
         }
+        
+        /*synchronized(this.listaPacientes){
+            this.listaPacientes.put(paciente.getDocumento(), paciente);
+            this.gui.addRowToJTablePacientes(this.listaPacientes);
+        }*/
 
         boolean transaccionConsumada = false;  
         
@@ -284,10 +210,10 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                             = this.verificarEPSPaciente(paciente.getDocumento(),
                                     paciente.getEPS(), ipEPSPaciente);
                     
-                    System.out.println("Paciente "+paciente.getNombre()+" eps: "+pacienteCuentaConEPS);
+                    //System.out.println("Paciente "+paciente.getNombre()+" eps: "+pacienteCuentaConEPS);
 
                     if (pacienteCuentaConEPS) {
-                        System.out.println("Se va a consumar para "+paciente.getNombre());
+                        //System.out.println("Se va a consumar para "+paciente.getNombre());
                         //boolean consumada = this.consumarCita(this.transacciones.get(0));
                         boolean consumada = this.consumarCita(transaccion);
                         this.transacciones.remove(0);
@@ -329,7 +255,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     public boolean consumarCita(Transaccion transaccion) {
         synchronized (this) {            
             Paciente paciente = (Paciente) transaccion.getObjeto();
-            System.out.println("Consumando para paciente "+paciente.getNombre());
+            //System.out.println("Consumando para paciente "+paciente.getNombre());
             String EPSPaciente = paciente.getEPS();
             String ipEPS = this.listaEPSs.get(EPSPaciente);
             List<Cita> Calendario;
@@ -372,13 +298,21 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     dia++;
                 }else
                     hora++;
+                
+                /*if(prioridad < 70){
+                    System.out.println("Menor para el paciente "+paciente.getNombre());
+                } */               
 
                 if (prioridad >= 70 && prioridad < 90) {
-
-                    Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
-
+                    Cita nuevaCita = new Cita(paciente.getDocumento(), prioridad, dia, hora);
+                    Calendario.add(nuevaCita);
+                    String ipGrupo = paciente.getIpGrupo();
+                    String idGrupo = paciente.getIdGrupo();
+                    //System.out.println("Enviando a ip "+ipGrupo+" con id "+idGrupo);
+                    this.enviarCitaGrupoPacientes(nuevaCita, ipGrupo, idGrupo);
                 }
 
+                
                 if (prioridad >= 90) {
 
                     Calendario.add(new Cita(paciente.getDocumento(), prioridad, dia, hora));
