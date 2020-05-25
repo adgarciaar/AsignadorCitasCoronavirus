@@ -135,7 +135,8 @@ public class GUIGrupoPacientes extends javax.swing.JFrame {
     }
     
     public void addRowToJTablePacientes(HashMap<String, Paciente> pacientes, 
-            HashMap<String, String> situacionPacientes){        
+            HashMap<String, String> situacionPacientes){       
+        
         
         DefaultTableModel model = (DefaultTableModel) jTablePacientes.getModel();
         Object rowData[] = new Object[5];        

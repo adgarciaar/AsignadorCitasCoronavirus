@@ -19,6 +19,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
     private HashMap<String, MarcasTiempoEPS> marcasTiempoEPSs;
     //mapa con duplas <Documento paciente, Paciente>
     private HashMap<String, Paciente> listaPacientes;
-
+    private HashMap<String, String> listaGruposPacientes;
     private String ipServidorINS;
     private int puertoINS;
 
@@ -47,6 +48,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
         this.ipServidorINS = ipServidorINS;
         this.puertoINS = puertoINS;
 
+        this.listaGruposPacientes = new HashMap<>();
         this.listaEPSs = new HashMap<>();
         this.marcasTiempoEPSs = new HashMap<>();       
         this.listaPacientes = new HashMap<>();  
@@ -63,6 +65,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 this.marcasTiempoEPSs.put(nombreEPS, new MarcasTiempoEPS());
                 System.out.println("Registrada la EPS " + nombreEPS);
                 this.gui.addRowToJTableEPS(nombreEPS, ipEPS);
+                
                 return true;
             } else {
                 System.out.println("La EPS " + nombreEPS + " ya se está registrada");
@@ -93,20 +96,20 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
             return serverInterface.pacienteTieneCobertura(documentoPaciente);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.out.println("1"+e.toString());
             return false;
         }
 
     }
    
-    public void enviarCitaGrupoPacientes(Cita cita, String ipGrupo, String idGrupo){
+    public void enviarCitaGrupoPacientes(List<Cita> Calendario, String ipGrupo, String idGrupo){
         
         try {
             String nombreServicio = "//"+ipGrupo+":"+this.puerto+"/ServicioPacientes"+idGrupo;            
             InterfaceGrupoPacientes serverInterface = 
                     (InterfaceGrupoPacientes) Naming.lookup(nombreServicio);
             
-            serverInterface.informarAsignacionCita(cita);
+            serverInterface.informarAsignacionCita(Calendario);
         } catch (Exception e) {
             System.out.println("Error al informar grupo de paciente: "+e.toString());
         }
@@ -146,6 +149,8 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             this.transacciones.add(transaccion);
             this.transacciones.sort(null);  
             this.gui.addRowToJTablePacientes(paciente);
+            this.listaPacientes.put(paciente.getDocumento(), paciente);
+            this.listaGruposPacientes.put(ipGrupo, idGrupo);
         }
         
         /*synchronized(this.listaPacientes){
@@ -159,7 +164,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
 
             synchronized (this.transacciones) {
                 //ver si esta transaccion es la siguiente en la lista
-                if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
+                //if (transaccion.getTimeStamp().equals(this.transacciones.get(0).getTimeStamp())) {
 
                     String ipEPSPaciente = this.listaEPSs.get(paciente.getEPS());
                     boolean pacienteCuentaConEPS
@@ -186,10 +191,12 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                       //  this.transacciones.notify();
                       System.out.println("Transacción consumada para paciente "+paciente.getNombre());
                     } else { //Abortar la transacción
+                        this.enviarMensajeGrupoPacientes(paciente.getDocumento(),
+                            "No activo en EPS", ipGrupo, idGrupo);
                         System.out.println("---Transacción abortada para paciente "+paciente.getNombre());
                         transaccionConsumada = true;
                     }
-                } else {
+               /* } else {
                     System.out.println("--Transacción abortada para paciente "+paciente.getNombre());
                     if (!this.transacciones.isEmpty()){                        
                         this.transacciones.clear();                       
@@ -199,7 +206,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     
                     transaccionConsumada = false;
 
-                }
+                }*/
             }
 
         }
@@ -261,23 +268,28 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 }else
                     hora++;
                 
-                if(prioridad < 40){
+                if(prioridad < 70){
                     String ipGrupo = paciente.getIpGrupo();
                     String idGrupo = paciente.getIdGrupo(); 
                     this.enviarMensajeGrupoPacientes(paciente.getDocumento(),
                             "No elegible para cita", ipGrupo, idGrupo);
                 }
 
-                if (prioridad >= 40 && prioridad < 70) {
+                if (prioridad >= 70 && prioridad < 90) {
                     
                     Cita nuevaCita = new Cita(paciente.getDocumento(), prioridad, dia, hora);
                     Calendario.add(nuevaCita);
                     String ipGrupo = paciente.getIpGrupo();
-                    String idGrupo = paciente.getIdGrupo();                    
-                    this.enviarCitaGrupoPacientes(nuevaCita, ipGrupo, idGrupo);
+                    String idGrupo = paciente.getIdGrupo();     
+                    for (String i : listaGruposPacientes.keySet()) {
+                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
+                        }
+                    
+                    //this.enviarCitaGrupoPacientes(Calendario, ipGrupo, idGrupo);
+                    
                 }
 
-                if (prioridad >= 70) {
+                if (prioridad >= 90) {
                     
                     if (!Calendario.isEmpty()) {
                         int horaAux,diaAux;
@@ -293,15 +305,22 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                         citaAux.setHora(hora);
                         
                         String ipGrupo = paciente.getIpGrupo();
-                        String idGrupo = paciente.getIdGrupo();                    
-                        this.enviarCitaGrupoPacientes(nuevaCita, ipGrupo, idGrupo);
+                        String idGrupo = paciente.getIdGrupo();       
+                        
+                        for (String i : listaGruposPacientes.keySet()) {
+                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
+                        }
+                        //this.enviarCitaGrupoPacientes(Calendario, ipGrupo, idGrupo);
                         
                     }else{
                         Cita nuevaCita = new Cita(paciente.getDocumento(), prioridad, dia, hora);
                         Calendario.add(nuevaCita);
                         String ipGrupo = paciente.getIpGrupo();
-                        String idGrupo = paciente.getIdGrupo();                    
-                        this.enviarCitaGrupoPacientes(nuevaCita, ipGrupo, idGrupo);
+                        String idGrupo = paciente.getIdGrupo();  
+                        for (String i : listaGruposPacientes.keySet()) {
+                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
+                        }
+                        
                     }
                 }
 
@@ -310,7 +329,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                 
                 actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente); //borrar esta
                 
-                /*if (puedeConsumar(ipEPS, EPSPaciente)) {
+               /* if (puedeConsumar(ipEPS, EPSPaciente)) {
 
                     actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente);
 
@@ -354,7 +373,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
             serverInterface.actualizarCalendaro(Calendario);
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.out.println("2"+e.toString());
         }
     }
     
@@ -364,7 +383,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
             InterfaceEPS serverInterface = (InterfaceEPS) Naming.lookup(nombreServicio);
             return serverInterface.puedeConsumar();
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.out.println("3"+e.toString());
             return false;
         }
     }

@@ -30,7 +30,7 @@ public class InicioServidorCitas {
             
             servicio.crearGUI();
         } catch (Exception e) {
-            System.out.println("Error: "+e.toString());
+            System.out.println("6Error: "+e.toString());
             System.exit(1);
         }        
         

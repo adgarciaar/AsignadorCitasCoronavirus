@@ -16,6 +16,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -124,14 +125,18 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
             Cita cita = serverInterface.obtenerCita(paciente, this.ipGrupoPacientes, this.idGrupo);
             System.out.println("Solicitada cita para paciente "+paciente.getNombre());
         } catch (Exception e) {
-            System.out.println("Error: "+e.toString());
+            System.out.println("3Error: "+e.toString());
         }
         
     }
 
     @Override
-    public void informarAsignacionCita(Cita cita) throws RemoteException {
-        this.citasPacientes.put(cita.getDocumentoPaciente(), cita.getIdCita());
+    public void informarAsignacionCita(List<Cita> Calendario) throws RemoteException {
+        for (int i = 0; i < Calendario.size(); i++) {
+            this.citasPacientes.put(Calendario.get(i).getDocumentoPaciente(), Calendario.get(i).getIdCita());
+          //  System.out.println("--->"+Calendario.get(i).getDocumentoPaciente()); 
+        }
+        
         this.gui.addRowToJTablePacientes(this.pacientes, this.citasPacientes);
         System.out.println("Asignación de cita recibida desde servidor de citas:");        
     }

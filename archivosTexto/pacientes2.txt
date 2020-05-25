@@ -1,0 +1,17 @@
+Grupo2
+5
+ID6	Santiago	66	MiEPS
+7	Fiebre	Tos	Cansancio	Insuficiencia pulmonar	Shock séptico	Falta de aire y dificultad para respirar	Falla multiorgánica
+1	Cáncer
+ID7	Andres	22	LaEPS
+2	Cansancio	Dolor	Fiebre	Tos
+0
+ID8	Ana	56	MiEPS
+3	Fiebre	Tos	Cansancio
+1	Diabetes
+ID9	Camila	70	MiEPS
+8	Tos	Cansancio	Dolor	Insuficiencia pulmonar	Falta de aire y dificultad para respirar	Insuficiencia pulmonar	Shock séptico	Falla multiorgánica
+8	Asma	Cirugía del corazón	Diabetes	EPOC	Cáncer	Sinusitis	Rinitis	Obesidad leve	Embarazo
+ID10	Nicolas	45	LaEPS
+5	Fiebre	Tos	Cansancio	Dolor	Shock séptico	Insuficiencia pulmonar
+1	EPOC

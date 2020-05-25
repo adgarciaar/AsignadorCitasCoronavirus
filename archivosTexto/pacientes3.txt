@@ -1,0 +1,17 @@
+Grupo3
+5
+ID11	Sebastian	66	MiEPS
+7	Fiebre	Tos	Cansancio	Insuficiencia pulmonar	Shock séptico	Falta de aire y dificultad para respirar	Falla multiorgánica
+1	Cáncer
+ID12	Felipe	77	LaEPS
+8	Tos	Cansancio	Dolor	Insuficiencia pulmonar	Falta de aire y dificultad para respirar	Insuficiencia pulmonar	Shock séptico	Falla multiorgánica
+8	Asma	Cirugía del corazón	Diabetes	EPOC	Cáncer	Sinusitis	Rinitis	Obesidad leve	Embarazo
+ID13	Diana	56	MiEPS
+3	Fiebre	Tos	Cansancio
+1	Diabetes
+ID14	Miguel	67	LaEPS
+7	Fiebre	Tos	Cansancio	Insuficiencia pulmonar	Shock séptico	Falta de aire y dificultad para respirar	Falla multiorgánica
+1	Cáncer
+ID15	Marta	75	LaEPS
+9	Fiebre	Tos	Cansancio	Dolor	Insuficiencia pulmonar	Falta de aire y dificultad para respirar	Insuficiencia pulmonar	Shock séptico	Falla multiorgánica
+8	Asma	Cirugía del corazón	Diabetes	EPOC	Cáncer	Sinusitis	Rinitis	Obesidad leve	Embarazo

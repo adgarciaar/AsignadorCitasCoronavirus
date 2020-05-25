@@ -86,7 +86,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
                 r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
             }
             //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
-            r.bind("ServicioEPS" + this.nombre, this);
+            r.rebind("ServicioEPS" + this.nombre, this);
             System.out.println("Servidor de la EPS activo: ServicioEPS"+this.nombre+"\n");
         } catch (Exception e) {
             System.out.println(e.toString());

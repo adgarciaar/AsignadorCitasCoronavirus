@@ -3,9 +3,9 @@ Grupo1
 ID1	Mateo	66	MiEPS
 7	Fiebre	Tos	Cansancio	Insuficiencia pulmonar	Shock séptico	Falta de aire y dificultad para respirar	Falla multiorgánica
 1	Cáncer
-ID2	Daniela	22	MiEPS
-2	Cansancio	Dolor
-0
+ID2	Daniela	77	LaEPS
+7	Fiebre	Tos	Cansancio	Insuficiencia pulmonar	Shock séptico	Falta de aire y dificultad para respirar	Falla multiorgánica
+1	Cáncer
 ID3	Nicolas	56	MiEPS
 3	Fiebre	Tos	Cansancio
 1	Diabetes
