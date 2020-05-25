@@ -195,6 +195,8 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                             "No activo en EPS", ipGrupo, idGrupo);
                         System.out.println("---Transacción abortada para paciente "+paciente.getNombre());
                         transaccionConsumada = true;
+                        this.enviarMensajeGrupoPacientes(paciente.getDocumento(),
+                            "No activo en EPS", ipGrupo, idGrupo);
                     }
                /* } else {
                     System.out.println("--Transacción abortada para paciente "+paciente.getNombre());
