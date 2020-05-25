@@ -149,7 +149,7 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
          
         Random r = new Random();
         double rand = r.nextInt(100) + r.nextDouble();
-        if (rand < 0.1) {
+        if (rand < 50) {
             return false;
         } else {
             return true;

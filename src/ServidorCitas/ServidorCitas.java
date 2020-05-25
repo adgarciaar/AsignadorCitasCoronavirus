@@ -275,6 +275,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     String idGrupo = paciente.getIdGrupo(); 
                     this.enviarMensajeGrupoPacientes(paciente.getDocumento(),
                             "No elegible para cita", ipGrupo, idGrupo);
+                    return true;
                 }
 
                 if (prioridad >= 70 && prioridad < 90) {
@@ -283,9 +284,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                     Calendario.add(nuevaCita);
                     String ipGrupo = paciente.getIpGrupo();
                     String idGrupo = paciente.getIdGrupo();     
-                    for (String i : listaGruposPacientes.keySet()) {
-                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
-                        }
+
                     
                     //this.enviarCitaGrupoPacientes(Calendario, ipGrupo, idGrupo);
                     
@@ -309,9 +308,7 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                         String ipGrupo = paciente.getIpGrupo();
                         String idGrupo = paciente.getIdGrupo();       
                         
-                        for (String i : listaGruposPacientes.keySet()) {
-                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
-                        }
+
                         //this.enviarCitaGrupoPacientes(Calendario, ipGrupo, idGrupo);
                         
                     }else{
@@ -319,30 +316,33 @@ public class ServidorCitas extends UnicastRemoteObject implements InterfaceServi
                         Calendario.add(nuevaCita);
                         String ipGrupo = paciente.getIpGrupo();
                         String idGrupo = paciente.getIdGrupo();  
-                        for (String i : listaGruposPacientes.keySet()) {
-                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
-                        }
-                        
+
                     }
                 }
 
-                Collections.sort(Calendario);
+                
 
                 
-                actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente); //borrar esta
-                
-               /* if (puedeConsumar(ipEPS, EPSPaciente)) {
+               // actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente); //borrar esta
+               
+               if (transaccion.getTimeStamp().compareTo(marcasEPS.getMarcaLectura()) >= 0
+                    && transaccion.getTimeStamp().compareTo(marcasEPS.getMarcaEscritura())>= 0) {
+                   for (String i : listaGruposPacientes.keySet()) {
+                            this.enviarCitaGrupoPacientes(Calendario, i, listaGruposPacientes.get(i));
+                        }
+                Collections.sort(Calendario);
+                if (puedeConsumar(ipEPS, EPSPaciente)) {
 
                     actualizarCalendarioEPS(Calendario, ipEPS, EPSPaciente);
+                    System.out.println("respuesta OK");
 
                 } else {
-                    try {
-                        this.wait();
-                    } catch (Exception e) {
-                        System.out.println("Thread interrupted.");
-                    }
-                }*/
+                    System.out.println("respuesta CANCEl");
+                    return false;
+                }
                 marcasEPS.setMarcaEscritura(transaccion.getTimeStamp());
+               }else 
+                   return false;
 
                 //notificar cita consumada
             } else {
