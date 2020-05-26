@@ -19,7 +19,7 @@ import java.util.Scanner;
  */
 public class InicioEPS {
     
-    public void iniciarEPS(String ipServidorCitas, int puertoServidorCitas, String rutaArchivo) {
+    public void iniciarEPS(String ipServidorCitas, int puertoServidorCitas, String rutaArchivo, boolean mismaMaquina) {
         
         List<String> instruccionesConfiguracion = new ArrayList<>();
         
@@ -54,7 +54,7 @@ public class InicioEPS {
         
         try {
             EPS eps = new EPS(ipServidorCitas, puertoServidorCitas, nombreEPS, 
-                    pacientesConServicio);
+                    pacientesConServicio, mismaMaquina);
             eps.registrarEPS();
             
             System.out.println("\nPacientes de la EPS");

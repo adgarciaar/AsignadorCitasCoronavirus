@@ -43,6 +43,7 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
         jButtonIniciar = new javax.swing.JButton();
         jButtonArchivo = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,6 +73,8 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
 
         jLabel3.setText("Grupo Pacientes");
 
+        jCheckBox1.setText("Misma máquina?");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,8 +97,13 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(136, 136, 136))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(136, 136, 136))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jCheckBox1)
+                        .addGap(123, 123, 123))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +118,9 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addComponent(jCheckBox1)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonIniciar)
                     .addComponent(jButtonArchivo))
@@ -132,7 +142,15 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
             String ip = jTextFieldIp.getText();
             int puerto = Integer.parseInt(jTextFieldPuerto.getText());
             InicioGrupoPacientes inicioGrupo = new InicioGrupoPacientes();
-            inicioGrupo.iniciarGrupo(ip, puerto, this.rutaArchivo);
+            
+            boolean mismaMaquina;
+            if(jCheckBox1.isSelected()){
+                mismaMaquina = true;
+            }else{
+                mismaMaquina = false;
+            }
+            
+            inicioGrupo.iniciarGrupo(ip, puerto, this.rutaArchivo, mismaMaquina);
             this.setVisible(false);
         }
     }//GEN-LAST:event_jButtonIniciarActionPerformed
@@ -190,6 +208,7 @@ public class GUIInicioGrupoPacientes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonArchivo;
     private javax.swing.JButton jButtonIniciar;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -39,9 +39,11 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
     private HashMap<String, String> citasPacientes;
     
     private GUI_EPS gui;
+    
+    private boolean mismaMaquina;
 
     public EPS(String ipServidorCitas, int puerto, String nombre, 
-            HashMap<String, String> pacientesConServicio) throws RemoteException {
+            HashMap<String, String> pacientesConServicio, boolean mismaMaquina) throws RemoteException {
         
         this.ipServidorCitas = ipServidorCitas;
         this.puertoServidorCitas = puerto;
@@ -50,6 +52,8 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         
         this.citasPacientes = new HashMap<>();
         this.citas = new ArrayList<>();
+        
+        this.mismaMaquina = mismaMaquina;
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -77,12 +81,17 @@ public class EPS extends UnicastRemoteObject implements InterfaceEPS {
         //Registrar el servicio de esa EPS
         try {
             Registry r = null;
-            if(this.ipServidorCitas.equals(this.ipEPS)){
+            /*if(this.ipServidorCitas.equals(this.ipEPS)){
                 //para poder ejecutarlos en misma máquina
                 //System.out.println("estan en misma máquina");
                 r = java.rmi.registry.LocateRegistry.getRegistry(this.puertoServidorCitas);
             }else{
                 //System.out.println("no estan en misma máquina");
+                r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
+            }*/
+            if(this.mismaMaquina){
+                r = java.rmi.registry.LocateRegistry.getRegistry(this.puertoServidorCitas);
+            }else{
                 r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
             }
             //Registry r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);

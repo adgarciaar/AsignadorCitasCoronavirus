@@ -20,7 +20,7 @@ import java.util.Scanner;
  */
 public class InicioGrupoPacientes {    
     
-    public void iniciarGrupo(String ipServidorCitas, int puertoServidorCitas, String rutaArchivo) {
+    public void iniciarGrupo(String ipServidorCitas, int puertoServidorCitas, String rutaArchivo, boolean mismaMaquina) {
         
         List<String> instruccionesConfiguracion = new ArrayList<>();
         
@@ -91,7 +91,7 @@ public class InicioGrupoPacientes {
         
         GrupoPacientes grupoPacientes = null;
         try {
-            grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo);           
+            grupoPacientes = new GrupoPacientes(ipServidorCitas, puertoServidorCitas, pacientes, idGrupo, mismaMaquina);           
         } catch (RemoteException e) {
             System.out.println("Error: "+e.toString());
         }

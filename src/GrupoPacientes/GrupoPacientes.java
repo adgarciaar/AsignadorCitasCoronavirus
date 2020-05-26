@@ -34,9 +34,11 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
     private HashMap<String, String> citasPacientes;   
     
     private GUIGrupoPacientes gui;
+    
+    private boolean mismaMaquina;
 
     public GrupoPacientes(String ipServidorCitas, int puerto, HashMap<String, Paciente> pacientes
-        , String idGrupo) throws RemoteException {
+        , String idGrupo, boolean mismaMaquina) throws RemoteException {
         
         this.ipServidorCitas = ipServidorCitas;
         this.puertoServidorCitas = puerto;
@@ -44,6 +46,8 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         this.idGrupo = idGrupo;
         
         this.citasPacientes = new HashMap<>();
+        
+        this.mismaMaquina = mismaMaquina;
         
         //se consigue la ip de la máquina en que se está ejecutando esta función
         InetAddress inetAddress = null;
@@ -76,8 +80,13 @@ public class GrupoPacientes extends UnicastRemoteObject implements InterfaceGrup
         //Registrar el servicio de esa EPS
         try {
             Registry r = null;
-            if(this.ipServidorCitas.equals(this.ipGrupoPacientes)){
+            /*if(this.ipServidorCitas.equals(this.ipGrupoPacientes)){
                 //para poder ejecutarlos en misma máquina
+                r = java.rmi.registry.LocateRegistry.getRegistry(this.puertoServidorCitas);
+            }else{
+                r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
+            }*/
+            if(this.mismaMaquina){
                 r = java.rmi.registry.LocateRegistry.getRegistry(this.puertoServidorCitas);
             }else{
                 r = java.rmi.registry.LocateRegistry.createRegistry(this.puertoServidorCitas);
